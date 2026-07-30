@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuizRush - Kuis real-time cepat-cepatan! Uji pengetahuanmu dan bersaing di leaderboard.">
+  <meta name="theme-color" content="#0a0a1a">
+  <title>QuizRush ⚡ Multiplayer Arena</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-v2.css">
+</head>
+<body>
+
+  <!-- Particle Background -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ==========================================
+       PAGE: LOGIN
+       ========================================== -->
+  <section id="page-login" class="page active">
+    <div class="glass-card login-card">
+      <div class="login-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px; color: var(--color-accent);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <h1 class="login-title">QuizRush</h1>
+      <p class="login-subtitle">Uji kecepatan & pengetahuanmu! Bersaing secara real-time.</p>
+
+      <div class="input-group">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" placeholder="Masukkan username kamu..." maxlength="15" autocomplete="off">
+      </div>
+
+      <div class="avatar-section">
+        <label>Pilih Avatar</label>
+        <div class="avatar-display" id="selected-avatar-display">
+          <!-- SVG avatar injected here -->
+        </div>
+        <div id="avatar-grid"></div>
+      </div>
+
+      <div class="auth-buttons">
+        <button id="btn-login" class="btn btn-secondary">Masuk</button>
+        <button id="btn-register" class="btn btn-primary">Daftar Baru</button>
+      </div>
+
+      <p id="login-error" class="auth-message"></p>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: LOBBY
+       ========================================== -->
+  <section id="page-lobby" class="page">
+    <div class="glass-card glass-card-wide lobby-card">
+      <div class="lobby-header">
+        <div class="lobby-avatar-big" id="lobby-avatar"></div>
+        <div class="lobby-user-info">
+          <span class="lobby-welcome">Selamat datang,</span>
+          <h2 class="lobby-user-name" id="lobby-username">Player</h2>
+        </div>
+      </div>
+
+      <div class="lobby-stats">
+        <div class="lobby-stat-item">
+          <div class="lobby-stat-value" id="lobby-best-score">0</div>
+          <div class="lobby-stat-label">Skor Tertinggi</div>
+        </div>
+        <div class="lobby-stat-item">
+          <div class="lobby-stat-value" id="lobby-total-games">0</div>
+          <div class="lobby-stat-label">Total Main</div>
+        </div>
+        <div class="lobby-stat-item">
+          <div class="lobby-stat-value" id="lobby-accuracy">0%</div>
+          <div class="lobby-stat-label">Akurasi</div>
+        </div>
+      </div>
+
+      <div class="lobby-actions-grid">
+        <button id="btn-spin-wheel-lobby" class="btn btn-accent">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 12l4.5-7.8"/><circle cx="12" cy="12" r="2"/></svg> Spin Wheel</button>
+        <button id="btn-practice" class="btn btn-secondary"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Practice (Bot)</button>
+        <button id="btn-join-arena" class="btn btn-primary requires-firebase"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Gabung Arena</button>
+        <button id="btn-create-quiz" class="btn btn-success requires-firebase"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Buat Kuis</button>
+        <button id="btn-logout" class="btn btn-danger"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Keluar</button>
+      </div>
+      
+      <div id="multiplayer-status" style="text-align: center; margin-bottom: 20px;">
+        <span class="status-offline">🔴 Multiplayer Offline — Konfigurasi Firebase</span>
+      </div>
+
+      <div class="lobby-history">
+        <h3 style="display:flex; align-items:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Riwayat Skor</h3>
+        <div id="lobby-score-history">
+          <p class="no-data">Belum ada riwayat permainan</p>
+        </div>
+      </div>
+
+      <!-- Global Leaderboard -->
+      <div class="lobby-history" style="margin-top: 20px;">
+        <h3 style="display:flex; align-items:center; justify-content:space-between;">
+          <span style="display:flex; align-items:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> 🌍 Global Leaderboard</span>
+          <button id="btn-refresh-glb" class="btn btn-secondary btn-sm" style="padding:4px 10px; font-size:0.75rem;">↻ Refresh</button>
+        </h3>
+        <div id="global-lb-list">
+          <p class="no-data" style="font-size:0.8rem;">⏳ Memuat...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: SETUP (Practice Mode)
+       ========================================== -->
+  <section id="page-setup" class="page">
+    <div class="glass-card glass-card-wide setup-card">
+      <h2 class="setup-title" style="display:flex; align-items:center; justify-content:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Practice Mode</h2>
+      <p class="setup-subtitle">Latihan melawan bot AI</p>
+
+      <div class="setup-grid">
+        <div class="input-group">
+          <label for="setup-question-count">Jumlah Soal</label>
+          <select id="setup-question-count">
+            <option value="5">5 Soal</option>
+            <option value="10">10 Soal</option>
+            <option value="15">15 Soal</option>
+            <option value="20" selected>20 Soal</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="setup-category">Kategori</label>
+          <select id="setup-category">
+            <option value="all">Semua Kategori</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="setup-difficulty">Tingkat Kesulitan</label>
+          <select id="setup-difficulty">
+            <option value="all">Semua Level</option>
+            <option value="easy">🟢 Mudah</option>
+            <option value="medium">🟡 Sedang</option>
+            <option value="hard">🔴 Sulit</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="setup-time">Waktu per Soal</label>
+          <select id="setup-time">
+            <option value="5">5 Detik</option>
+            <option value="10" selected>10 Detik</option>
+            <option value="15">15 Detik</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="setup-bot-count">Jumlah Lawan (Bot)</label>
+          <select id="setup-bot-count">
+            <option value="3">3 Pemain</option>
+            <option value="7" selected>7 Pemain</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button id="btn-back-lobby-setup" class="btn btn-secondary">← Kembali</button>
+        <button id="btn-begin-practice" class="btn btn-success"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Mulai Latihan!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: CREATOR (Make Custom Quiz)
+       ========================================== -->
+  <section id="page-creator" class="page">
+    <div class="glass-card glass-card-wide">
+      <h2 class="setup-title" style="display:flex; align-items:center; justify-content:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Buat Kuis Baru</h2>
+      <p class="setup-subtitle">Buat kuis custom untuk dimainkan bersama teman</p>
+
+      <div id="creator-form-container" class="creator-container">
+        <!-- Injected by quiz-creator.js -->
+      </div>
+
+      <p id="creator-error" class="auth-message"></p>
+
+      <div class="setup-actions" style="margin-top: 20px;">
+        <button id="btn-back-lobby-creator" class="btn btn-secondary">← Batal</button>
+        <button id="btn-create-arena" class="btn btn-success"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Buat Arena & Dapatkan Link</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: JOIN ARENA
+       ========================================== -->
+  <section id="page-join" class="page">
+    <div class="glass-card" style="text-align: center;">
+      <h2 class="setup-title" style="display:flex; align-items:center; justify-content:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Gabung Arena</h2>
+      <p class="setup-subtitle">Masukkan kode room untuk bermain bersama</p>
+
+      <div class="input-group" style="margin: 30px 0; text-align: left;">
+        <label>Kode Room</label>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="join-room-code" placeholder="Contoh: X7Y8Z9" maxlength="6" style="text-transform: uppercase; font-size: 1.5rem; text-align: center; letter-spacing: 5px; flex:1; width: 100%;">
+          <button id="btn-scan-qr" class="btn btn-secondary" style="flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px; min-width: 80px;">
+            <svg class="icon-svg" style="margin:0; margin-bottom:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+            <span style="font-size:0.75rem;">Scan QR</span>
+          </button>
+        </div>
+      </div>
+      <div id="qr-reader" style="width:100%; max-width: 400px; margin: 10px auto; display: none; background: white; color: black; border-radius: 8px; overflow:hidden;"></div>
+
+      <p id="join-error" class="auth-message"></p>
+
+      <div class="setup-actions" style="margin-top: 20px;">
+        <button id="btn-back-lobby-join" class="btn btn-secondary">← Batal</button>
+        <button id="btn-join-room" class="btn btn-primary"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Masuk Arena</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: WAITING ROOM
+       ========================================== -->
+  <section id="page-waiting" class="page">
+    <div class="glass-card glass-card-wide">
+      <h2 class="setup-title" id="waiting-title">Menunggu Pemain...</h2>
+      <p class="host-label" id="waiting-host-label"></p>
+      
+      <div class="waiting-code-display">
+        <p>KODE ROOM</p>
+        <h2 id="waiting-room-code">------</h2>
+        <div class="share-link-group">
+          <input type="text" id="waiting-share-link" readonly>
+          <button id="btn-show-qr" class="btn btn-primary btn-sm"><svg class="icon-svg" style="margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/><rect x="14" y="14" width="3" height="3"/></svg> QR</button>
+          <button id="btn-copy-link" class="btn btn-secondary btn-sm"><svg class="icon-svg" style="margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
+        </div>
+      </div>
+
+      <h3>Daftar Pemain (<span id="waiting-player-count">1</span>)</h3>
+      <div id="waiting-players-list" class="waiting-players-list">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="setup-actions" style="margin-top: 20px;">
+        <button id="btn-leave-room" class="btn btn-danger">Keluar</button>
+        <button id="btn-start-arena" class="btn btn-success" style="display: none;">Mulai Kuis Sekarang! <svg class="icon-svg" style="margin-left:8px; margin-right:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: COUNTDOWN
+       ========================================== -->
+  <section id="page-countdown" class="page">
+    <div class="countdown-container">
+      <p class="countdown-label">Bersiap-siap...</p>
+      <div id="countdown-number" class="countdown-number">3</div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: QUIZ GAME
+       ========================================== -->
+  <section id="page-quiz" class="page">
+    <div class="quiz-container">
+      <!-- Main Quiz Area -->
+      <div class="quiz-main">
+        <!-- Top Bar -->
+        <div class="quiz-top-bar">
+          <div class="quiz-progress-area">
+            <span class="quiz-progress-text" id="quiz-progress">1 / 20</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="quiz-progress-bar"></div>
+            </div>
+          </div>
+          <div class="quiz-meta">
+            <span id="quiz-mode-label" style="font-weight:bold; color:var(--color-accent-light); margin-right: 10px;"></span>
+            <span id="quiz-category">Pengetahuan Umum</span>
+            <span id="quiz-difficulty">🟢 Mudah</span>
+          </div>
+          <div class="quiz-score-display">
+            <span class="quiz-score-label">Skor:</span>
+            <span class="quiz-score-value" id="quiz-score">0</span>
+          </div>
+        </div>
+
+        <!-- Streak -->
+        <div class="quiz-streak-text" id="quiz-streak"></div>
+
+        <!-- Timer -->
+        <div class="quiz-timer-area">
+          <div class="timer-circle">
+            <svg viewBox="0 0 100 100">
+              <circle class="timer-circle-bg" cx="50" cy="50" r="45"></circle>
+              <circle class="timer-circle-progress" id="timer-circle-progress" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <span class="timer-text" id="timer-text">10</span>
+          </div>
+          <!-- Mute Button -->
+          <button id="btn-mute" class="btn-mute" title="Mute / Unmute suara">🔊</button>
+        </div>
+
+        <!-- Power-Up Bar -->
+        <div class="powerup-bar" id="powerup-bar"></div>
+
+        <!-- Question Card -->
+        <div class="quiz-question-card">
+          <h2 class="quiz-question" id="quiz-question">Loading...</h2>
+          <div class="quiz-options" id="quiz-options"></div>
+        </div>
+      </div>
+
+      <!-- Sidebar: Mini Leaderboard -->
+      <div class="quiz-sidebar">
+        <div class="quiz-sidebar-card">
+          <h3 class="quiz-sidebar-title" style="display:flex; align-items:center; justify-content:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Peringkat Live</h3>
+          <div id="quiz-mini-leaderboard"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PAGE: RESULTS
+       ========================================== -->
+  <section id="page-results" class="page">
+    <div class="results-container">
+      <!-- Leaderboard -->
+      <div class="glass-card glass-card-full">
+        <div id="results-leaderboard"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="glass-card glass-card-full">
+        <div id="results-stats"></div>
+      </div>
+
+      <!-- Breakdown Toggle -->
+      <div class="glass-card glass-card-full results-breakdown-section">
+        <button id="btn-toggle-breakdown" class="btn btn-secondary" style="width:100%; margin-bottom: 12px;">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Lihat Detail Jawaban
+        </button>
+        <div id="results-breakdown" class="results-breakdown"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="results-actions">
+        <button id="btn-save-pdf" class="btn btn-success"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Simpan PDF</button>
+        <button id="btn-play-again" class="btn btn-primary"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Main Lagi / Lobby</button>
+        <button id="btn-back-lobby-results" class="btn btn-secondary"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Kembali</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MODAL: Spin the Wheel 🎡
+       ========================================== -->
+  <div id="spinner-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card glass-card spinner-modal-card">
+
+      <div class="spinner-modal-header">
+        <h3 class="modal-title">🎡 Spin the Wheel</h3>
+        <p class="spinner-subtitle">Putar roda &amp; lihat siapa yang terpilih!</p>
+      </div>
+
+      <!-- Canvas Wheel -->
+      <div class="wheel-wrapper">
+        <canvas id="spin-wheel-canvas"></canvas>
+      </div>
+
+      <!-- Spin Button -->
+      <button id="btn-spin-wheel" class="btn btn-primary spin-trigger-btn">🎰 PUTAR!</button>
+      <p id="spinner-input-error" class="auth-message error" style="min-height:18px; font-size:0.8rem;"></p>
+
+      <!-- Add Names -->
+      <div class="spinner-add-section">
+        <div class="spinner-add-row">
+          <input type="text" id="spinner-name-input" class="spinner-name-input" placeholder="Tambah nama..." maxlength="20" autocomplete="off">
+          <button id="btn-add-spinner-name" class="btn btn-success btn-sm">+</button>
+        </div>
+        <div id="spinner-names-list" class="spinner-names-list"></div>
+        <button id="btn-clear-spinner" class="btn btn-danger btn-sm spinner-clear-btn">🗑 Hapus Semua</button>
+      </div>
+
+      <div class="modal-actions" style="justify-content: center; margin-top: 16px;">
+        <button id="btn-close-spinner" class="btn btn-secondary">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Overlay -->
+  <div id="spinner-winner-overlay" class="spinner-winner-overlay" style="display: none;">
+    <div class="spinner-winner-card">
+      <div class="spinner-winner-emoji">🎉</div>
+      <div class="spinner-winner-label">Yang Terpilih!</div>
+      <div id="spinner-winner-color-bar" class="spinner-winner-color-bar"></div>
+      <div id="spinner-winner-name" class="spinner-winner-name">—</div>
+      <div class="spinner-winner-actions">
+        <button id="btn-spin-again" class="btn btn-primary">🔄 Putar Lagi</button>
+        <button id="btn-close-winner" class="btn btn-secondary">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for QR Code -->
+  <div id="qr-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card glass-card" style="text-align: center;">
+      <h3 class="modal-title">Scan QR Code</h3>
+      <p style="margin-bottom: 15px; font-size: 0.9rem; color: var(--text-secondary);">Scan untuk langsung bergabung ke Arena ini</p>
+      <div style="background: white; padding: 20px; border-radius: 12px; display: inline-block;">
+        <canvas id="qr-canvas"></canvas>
+      </div>
+      <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
+        <button id="btn-close-qr" class="btn btn-secondary">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Firebase SDK (Optional, for Multiplayer) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- Script for QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <!-- Script for PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Script for QR Scanner -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  
+  <!-- Scripts: App Logic (Order Matters) -->
+  <script src="js/sounds.js"></script>
+  <script src="js/spinner.js"></script>
+  <script src="js/powerups.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/avatars.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/bots.js"></script>
+  <script src="js/room.js"></script>
+  <script src="js/quiz-creator.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
