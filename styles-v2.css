@@ -185,3 +185,490 @@
 
 .dot-row { display: flex; width: 100%; justify-content: space-between; }
 .dot-row.center { justify-content: center; }
+
+/* ==========================================
+   Game Studio Dashboard & Non-AI Modern UI
+   ========================================== */
+.studio-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.studio-header-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(243, 244, 256, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.studio-user-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.studio-avatar-frame {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4, #f59e0b);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  animation: frameRotate 12s linear infinite;
+}
+
+@keyframes frameRotate {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.studio-avatar-frame svg {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.studio-user-meta h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 4px;
+}
+
+.studio-xp-bar {
+  width: 180px;
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+}
+
+.studio-xp-fill {
+  height: 100%;
+  width: 68%;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  border-radius: 10px;
+}
+
+/* Featured Game Grid */
+.game-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.game-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 170px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 35px -8px rgba(99, 102, 241, 0.22);
+}
+
+.game-card-ludo { background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%); border-color: #ffedd5; }
+.game-card-quiz { background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); border-color: #e0f2fe; }
+.game-card-spinner { background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%); border-color: #ede9fe; }
+.game-card-dice { background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); border-color: #fee2e2; }
+
+.game-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.game-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.game-card-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-hot { background: #fee2e2; color: #ef4444; }
+.badge-multi { background: #e0e7ff; color: #4f46e5; }
+.badge-fun { background: #fef3c7; color: #d97706; }
+
+.game-card-body h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 12px 0 4px 0;
+}
+
+.game-card-body p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.game-card-footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-play-card {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-play-card:hover { transform: scale(1.05); }
+
+/* ==========================================
+   Floating Bottom Dock Navigation Bar
+   ========================================== */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 30px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 16px 35px -10px rgba(99, 102, 241, 0.25), 0 0 0 1px rgba(255,255,255,0.9) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: #64748b;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 2px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-item:hover {
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.nav-item:hover svg {
+  transform: translateY(-2px) scale(1.1);
+}
+
+.nav-item.active {
+  color: #4f46e5;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+}
+
+.nav-item.active svg {
+  transform: scale(1.15);
+}
+
+.nav-badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* ==========================================
+   Ludo 4-Player Board & Arena Styles
+   ========================================== */
+:root {
+  --ludo-red: #ef4444;
+  --ludo-green: #10b981;
+  --ludo-yellow: #f59e0b;
+  --ludo-blue: #3b82f6;
+}
+
+.ludo-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 90px;
+}
+
+@media (max-width: 900px) {
+  .ludo-wrapper { grid-template-columns: 1fr; }
+}
+
+.ludo-board-container {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
+  border: 4px solid #cbd5e1;
+  aspect-ratio: 1 / 1;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#ludo-board {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  width: 100%;
+  height: 100%;
+  border: 2px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.ludo-cell {
+  border: 0.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Zone colors */
+.zone-red-base { background: #fee2e2; }
+.zone-green-base { background: #d1fae5; }
+.zone-yellow-base { background: #fef3c7; }
+.zone-blue-base { background: #dbeafe; }
+
+.zone-center {
+  background: conic-gradient(#ef4444 0deg 90deg, #10b981 90deg 180deg, #f59e0b 180deg 270deg, #3b82f6 270deg 360deg);
+  border: 2px solid #1e293b;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+}
+
+.base-box {
+  width: 85%;
+  height: 85%;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 3px solid;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.base-box-red { border-color: var(--ludo-red); }
+.base-box-green { border-color: var(--ludo-green); }
+.base-box-yellow { border-color: var(--ludo-yellow); }
+.base-box-blue { border-color: var(--ludo-blue); }
+
+.base-header {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+  color: #1e293b;
+}
+
+.base-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  flex: 1;
+}
+
+.token-slot {
+  background: #f1f5f9;
+  border-radius: 50%;
+  border: 1px dashed #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tokens */
+.ludo-token {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 10;
+}
+
+.token-red { background: radial-gradient(circle, #f87171, #dc2626); }
+.token-green { background: radial-gradient(circle, #34d399, #059669); }
+.token-yellow { background: radial-gradient(circle, #fbbf24, #d97706); }
+.token-blue { background: radial-gradient(circle, #60a5fa, #2563eb); }
+
+.token-movable {
+  animation: pulseMovable 0.8s ease-in-out infinite alternate;
+  box-shadow: 0 0 14px 4px #f59e0b;
+  z-index: 20;
+}
+
+@keyframes pulseMovable {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.35); }
+}
+
+/* Dice & Controls Side Panel */
+.ludo-panel {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ludo-turn-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.turn-avatar { width: 44px; height: 44px; }
+.turn-avatar svg { width: 100%; height: 100%; }
+
+.turn-label { font-size: 0.7rem; font-weight: 800; color: #64748b; letter-spacing: 1px; }
+.turn-name { font-size: 1.05rem; font-weight: 800; margin: 2px 0 0 0; }
+
+.ludo-dice-box {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, #6366f1, #4f46e5);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 900;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+}
+
+.ludo-dice-box.rolling {
+  animation: diceRollAnim 0.6s linear infinite;
+}
+
+@keyframes diceRollAnim {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.ludo-log-box {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 14px;
+  padding: 14px;
+  height: 180px;
+  overflow-y: auto;
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ludo-log-item {
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* Winner rows */
+.winner-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  margin-bottom: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.winner-rank-1 { background: #fef3c7; border-color: #f59e0b; }
+.winner-medal { font-size: 1.5rem; }
+.winner-avatar { width: 36px; height: 36px; }
+.winner-avatar svg { width: 100%; height: 100%; }
+.winner-name { flex: 1; font-weight: 800; color: #0f172a; }
+.winner-badge { font-weight: 700; font-size: 0.8rem; padding: 4px 8px; border-radius: 6px; background: #ffffff; }
+

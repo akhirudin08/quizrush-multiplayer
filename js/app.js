@@ -98,6 +98,7 @@ const App = {
     this.pages = {
       login: document.getElementById('page-login'),
       lobby: document.getElementById('page-lobby'),
+      ludo: document.getElementById('page-ludo'),
       setup: document.getElementById('page-setup'),
       creator: document.getElementById('page-creator'),
       join: document.getElementById('page-join'),
@@ -252,6 +253,25 @@ const App = {
     };
 
     document.getElementById('btn-spin-wheel-lobby').addEventListener('click', openSpinnerHandler);
+    
+    // Bottom Nav Dock Navigation & Game Card Listeners
+    document.querySelectorAll('.bottom-nav-bar .nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetPage = item.getAttribute('data-page');
+        const action = item.getAttribute('data-action');
+        if (targetPage) {
+          this.showPage(targetPage);
+        } else if (action === 'spinner') {
+          openSpinnerHandler();
+        }
+      });
+    });
+
+    const cardLudo = document.getElementById('card-play-ludo');
+    if (cardLudo) {
+      cardLudo.addEventListener('click', () => this.showPage('ludo'));
+    }
     
     // Check if the waiting room spinner button exists, then add listener
     const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
@@ -442,12 +462,25 @@ const App = {
       this.pages[pageName].classList.add('active');
     }
 
+    // Sync Bottom Navigation Bar
+    document.querySelectorAll('.bottom-nav-bar .nav-item').forEach(item => {
+      const p = item.getAttribute('data-page');
+      if (p === pageName) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+
     if (pageName === 'lobby') {
       const user = Auth.getCurrentUser();
       if (user) this.updateLobbyUI(user);
     }
     if (pageName === 'setup') {
       this.updateSetupUI();
+    }
+    if (pageName === 'ludo') {
+      if (window.LudoGameManager) LudoGameManager.init();
     }
   },
 
@@ -1497,30 +1530,37 @@ const App = {
     function createParticle() {
       return {
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        size: Math.random() * 2.5 + 0.5, speedX: (Math.random() - 0.5) * 0.4,
-        speedY: (Math.random() - 0.5) * 0.4, opacity: Math.random() * 0.6 + 0.2,
-        hue: Math.random() * 40 + 240  // indigo-violet range 240–280
+        size: Math.random() * 3.5 + 1.2, speedX: (Math.random() - 0.5) * 0.7,
+        speedY: (Math.random() - 0.5) * 0.7, opacity: Math.random() * 0.7 + 0.3,
+        hue: [230, 260, 190, 340, 45][Math.floor(Math.random() * 5)], // indigo, violet, cyan, pink, amber
+        pulse: Math.random() * Math.PI
       };
     }
 
-    function init() { particles = []; for (let i = 0; i < 80; i++) particles.push(createParticle()); }
+    function init() { particles = []; for (let i = 0; i < 90; i++) particles.push(createParticle()); }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 65%, 55%, ${p.opacity * 0.45})`; ctx.fill();
+        p.pulse += 0.03;
+        const currentSize = p.size + Math.sin(p.pulse) * 0.8;
+
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0.5, currentSize), 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 85%, 60%, ${p.opacity * 0.65})`; ctx.fill();
+        
         p.x += p.speedX; p.y += p.speedY;
         if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
       });
+
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath(); ctx.strokeStyle = `hsla(240, 65%, 55%, ${0.08 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5; ctx.moveTo(particles[i].x, particles[i].y);
+          if (dist < 130) {
+            ctx.beginPath();
+            ctx.strokeStyle = `hsla(${particles[i].hue}, 80%, 65%, ${0.22 * (1 - dist / 130)})`;
+            ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
           }
         }

@@ -7,6 +7,9 @@
   <meta name="theme-color" content="#0a0a1a">
   <title>QuizRush ⚡ Multiplayer Arena</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,67 +61,142 @@
   </section>
 
   <!-- ==========================================
-       PAGE: LOBBY
+       PAGE: LOBBY (Game Studio Dashboard)
        ========================================== -->
   <section id="page-lobby" class="page">
-    <div class="glass-card glass-card-wide lobby-card">
-      <div class="lobby-header">
-        <div class="lobby-avatar-big" id="lobby-avatar"></div>
-        <div class="lobby-user-info">
-          <span class="lobby-welcome">Selamat datang,</span>
-          <h2 class="lobby-user-name" id="lobby-username">Player</h2>
+    <div class="glass-card glass-card-full studio-dashboard" style="max-width: 1050px; padding-bottom: 90px;">
+      
+      <!-- User Profile Banner Card -->
+      <div class="studio-header-card">
+        <div class="studio-user-info">
+          <div class="studio-avatar-frame" id="lobby-avatar"></div>
+          <div class="studio-user-meta">
+            <span style="font-size: 0.8rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1px;">WELCOME BACK</span>
+            <h2 id="lobby-username">Player</h2>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Level 12 • Pro Racer</span>
+              <div class="studio-xp-bar"><div class="studio-xp-fill"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-logout" class="btn btn-danger btn-sm" style="padding: 10px 16px; border-radius: 12px;"><svg class="icon-svg" style="margin:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Keluar</button>
         </div>
       </div>
 
-      <div class="lobby-stats">
-        <div class="lobby-stat-item">
+      <!-- Stats Quick Bar -->
+      <div class="lobby-stats" style="margin: 0; grid-template-columns: repeat(3, 1fr);">
+        <div class="lobby-stat-item" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
           <div class="lobby-stat-value" id="lobby-best-score">0</div>
           <div class="lobby-stat-label">Skor Tertinggi</div>
         </div>
-        <div class="lobby-stat-item">
+        <div class="lobby-stat-item" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
           <div class="lobby-stat-value" id="lobby-total-games">0</div>
           <div class="lobby-stat-label">Total Main</div>
         </div>
-        <div class="lobby-stat-item">
+        <div class="lobby-stat-item" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
           <div class="lobby-stat-value" id="lobby-accuracy">0%</div>
           <div class="lobby-stat-label">Akurasi</div>
         </div>
       </div>
 
-      <div class="lobby-actions-grid">
-        <button id="btn-spin-wheel-lobby" class="btn btn-accent">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 12l4.5-7.8"/><circle cx="12" cy="12" r="2"/></svg> Spin Wheel (Lokal)</button>
-        <button id="btn-create-spinner-room" class="btn btn-accent requires-firebase" style="box-shadow: 0 4px 15px rgba(99,102,241,0.25); background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%); color: white; border: none;">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 12l4.5-7.8"/><circle cx="12" cy="12" r="2"/></svg> Buat Room Spinner</button>
-        <button id="btn-dice-roller" class="btn btn-warning" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(245,158,11,0.25);">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/></svg> Kocok Dadu 3D</button>
-        <button id="btn-practice" class="btn btn-secondary"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Practice (Bot)</button>
-        <button id="btn-join-arena" class="btn btn-primary requires-firebase"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Gabung Arena</button>
-        <button id="btn-create-quiz" class="btn btn-success requires-firebase"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Buat Kuis</button>
-        <button id="btn-logout" class="btn btn-danger"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Keluar</button>
+      <!-- Game Hub Modes Grid -->
+      <div>
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #1e1b4b; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+          <span>🎮 Game Arena Hub</span>
+        </h3>
+        
+        <div class="game-hub-grid">
+          <!-- Game 1: Ludo 4-Player -->
+          <div class="game-card game-card-ludo" id="card-play-ludo">
+            <div class="game-card-header">
+              <div class="game-card-icon" style="background: #ffedd5; color: #ea580c;">🎲</div>
+              <span class="game-card-badge badge-hot">BARU • 4 PLAYER</span>
+            </div>
+            <div class="game-card-body">
+              <h3>LudoRush 4P</h3>
+              <p>Main Ludo seru 4 pemain! Lawan teman atau 3 Bot AI dengan kuis bonus!</p>
+            </div>
+            <div class="game-card-footer">
+              <span style="font-size: 0.8rem; font-weight: 700; color: #ea580c;">1-4 Pemain</span>
+              <button class="btn-play-card" style="background: linear-gradient(135deg, #f97316, #ea580c);">Main Ludo 🎲</button>
+            </div>
+          </div>
+
+          <!-- Game 2: Arena Kuis Multiplayer -->
+          <div class="game-card game-card-quiz" id="card-join-arena">
+            <div class="game-card-header">
+              <div class="game-card-icon" style="background: #e0f2fe; color: #0284c7;">⚡</div>
+              <span class="game-card-badge badge-multi">ONLINE REALTIME</span>
+            </div>
+            <div class="game-card-body">
+              <h3>Kuis Arena Multiplayer</h3>
+              <p>Adu cepat & tepat menjawab soal kuis secara online bersama pemain lain!</p>
+            </div>
+            <div class="game-card-footer">
+              <button id="btn-join-arena" class="btn-play-card requires-firebase" style="background: linear-gradient(135deg, #0284c7, #2563eb);">Gabung Arena ⚡</button>
+              <button id="btn-create-quiz" class="btn btn-secondary btn-sm requires-firebase" style="padding: 6px 12px; border-radius: 10px;">+ Buat Kuis</button>
+            </div>
+          </div>
+
+          <!-- Game 3: Spin Wheel -->
+          <div class="game-card game-card-spinner" id="card-spin-wheel">
+            <div class="game-card-header">
+              <div class="game-card-icon" style="background: #ede9fe; color: #7c3aed;">🎡</div>
+              <span class="game-card-badge badge-fun">LOKAL & ROOM</span>
+            </div>
+            <div class="game-card-body">
+              <h3>Spin Wheel Spinner</h3>
+              <p>Putar roda keberuntungan untuk memilih topik kuis atau pemenang acak!</p>
+            </div>
+            <div class="game-card-footer">
+              <button id="btn-spin-wheel-lobby" class="btn-play-card" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">Putar Roda 🎡</button>
+              <button id="btn-create-spinner-room" class="btn btn-secondary btn-sm requires-firebase" style="padding: 6px 12px; border-radius: 10px;">Room 🌐</button>
+            </div>
+          </div>
+
+          <!-- Game 4: Practice Bot & 3D Dice -->
+          <div class="game-card game-card-dice">
+            <div class="game-card-header">
+              <div class="game-card-icon" style="background: #fee2e2; color: #dc2626;">🤖</div>
+              <span class="game-card-badge badge-fun">LATIHAN & DADU</span>
+            </div>
+            <div class="game-card-body">
+              <h3>Practice vs Bot</h3>
+              <p>Latihan kuis cepat melawan bot pintar atau kocok dadu 3D secara bebas.</p>
+            </div>
+            <div class="game-card-footer">
+              <button id="btn-practice" class="btn-play-card" style="background: linear-gradient(135deg, #dc2626, #ef4444);">Latihan Bot 🤖</button>
+              <button id="btn-dice-roller" class="btn btn-secondary btn-sm" style="padding: 6px 12px; border-radius: 10px;">Dadu 3D 🎲</button>
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div id="multiplayer-status" style="text-align: center; margin-bottom: 20px;">
+      <div id="multiplayer-status" style="text-align: center; margin: 10px 0;">
         <span class="status-offline">🔴 Multiplayer Offline — Konfigurasi Firebase</span>
       </div>
 
-      <div class="lobby-history">
-        <h3 style="display:flex; align-items:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Riwayat Skor</h3>
-        <div id="lobby-score-history">
-          <p class="no-data">Belum ada riwayat permainan</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="lobby-history" style="background: #ffffff; padding: 18px; border-radius: 16px; border: 1px solid #e2e8f0;">
+          <h3 style="display:flex; align-items:center; font-size: 1rem;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Riwayat Skor</h3>
+          <div id="lobby-score-history">
+            <p class="no-data">Belum ada riwayat permainan</p>
+          </div>
+        </div>
+
+        <div class="lobby-history" style="background: #ffffff; padding: 18px; border-radius: 16px; border: 1px solid #e2e8f0;">
+          <h3 style="display:flex; align-items:center; justify-content:space-between; font-size: 1rem;">
+            <span style="display:flex; align-items:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> 🌍 Global Leaderboard</span>
+            <button id="btn-refresh-glb" class="btn btn-secondary btn-sm" style="padding:4px 10px; font-size:0.75rem;">↻ Refresh</button>
+          </h3>
+          <div id="global-lb-list">
+            <p class="no-data" style="font-size:0.8rem;">⏳ Memuat...</p>
+          </div>
         </div>
       </div>
 
-      <!-- Global Leaderboard -->
-      <div class="lobby-history" style="margin-top: 20px;">
-        <h3 style="display:flex; align-items:center; justify-content:space-between;">
-          <span style="display:flex; align-items:center;"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> 🌍 Global Leaderboard</span>
-          <button id="btn-refresh-glb" class="btn btn-secondary btn-sm" style="padding:4px 10px; font-size:0.75rem;">↻ Refresh</button>
-        </h3>
-        <div id="global-lb-list">
-          <p class="no-data" style="font-size:0.8rem;">⏳ Memuat...</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -461,6 +539,109 @@
     </div>
   </div>
 
+  <!-- ==========================================
+       PAGE: LUDORUSH 4-PLAYER ARENA 🎲
+       ========================================== -->
+  <section id="page-ludo" class="page">
+    <div class="glass-card glass-card-full" style="max-width: 1100px; padding: 24px; text-align: left;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e1b4b; display: flex; align-items: center; gap: 10px;">
+          <span>🎲 LudoRush 4-Player Arena</span>
+        </h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <select id="ludo-player-config" style="padding: 8px 14px; border-radius: 12px; font-weight: 700; border: 1px solid #cbd5e1;">
+            <option value="1v3bot">1 Pemain vs 3 Bot AI</option>
+            <option value="2v2bot">2 Pemain vs 2 Bot AI</option>
+            <option value="4human">4 Pemain Lokal (Turn-based)</option>
+            <option value="2human">2 Pemain Lokal</option>
+          </select>
+          <button id="btn-toggle-ludo-quiz" class="btn btn-secondary btn-sm active" style="border-radius: 12px;">⚡ Mode Kuis: AKTIF</button>
+          <button id="btn-ludo-start" class="btn btn-primary btn-sm" style="border-radius: 12px;">🔄 Game Baru</button>
+        </div>
+      </div>
+
+      <div class="ludo-wrapper">
+        <!-- 15x15 Ludo Board -->
+        <div class="ludo-board-container">
+          <div id="ludo-board"></div>
+        </div>
+
+        <!-- Right Side Panel: Turn & Dice Controls -->
+        <div class="ludo-panel">
+          <div id="ludo-turn-card" class="ludo-turn-card">
+            <div class="turn-avatar">🔴</div>
+            <div class="turn-details">
+              <span class="turn-label">GILIRAN MAIN</span>
+              <h4 class="turn-name">Klik Game Baru</h4>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin: 10px 0;">
+            <div id="ludo-dice-box" class="ludo-dice-box" data-value="1">
+              <span class="dice-val-num">🎲</span>
+            </div>
+            <button id="btn-ludo-roll" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 1.1rem; background: linear-gradient(135deg, #6366f1, #4f46e5);">🎲 KOCOK DADU</button>
+          </div>
+
+          <!-- Log History -->
+          <div>
+            <h4 style="font-size: 0.85rem; font-weight: 800; color: #475569; margin-bottom: 8px;">📜 RIWAYAT LANGKAH</h4>
+            <div id="ludo-log-box" class="ludo-log-box">
+              <div class="ludo-log-item">Pilih mode &amp; klik "Game Baru" untuk memulai!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       Floating Bottom Dock Navigation Bar
+       ========================================== -->
+  <nav id="bottom-nav-bar" class="bottom-nav-bar">
+    <a id="nav-btn-home" class="nav-item active" data-page="lobby">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a id="nav-btn-ludo" class="nav-item" data-page="ludo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/></svg>
+      <span>Ludo 4P</span>
+      <span class="nav-badge">NEW</span>
+    </a>
+    <a id="nav-btn-quiz" class="nav-item" data-page="setup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>Kuis Arena</span>
+    </a>
+    <a id="nav-btn-spinner" class="nav-item" data-action="spinner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 12l4.5-7.8"/></svg>
+      <span>Spin Wheel</span>
+    </a>
+    <a id="nav-btn-creator" class="nav-item" data-page="creator">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>Buat Kuis</span>
+    </a>
+  </nav>
+
+  <!-- MODAL: Ludo Quiz Bonus Challenge ⚡ -->
+  <div id="ludo-quiz-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card glass-card" style="text-align: center; max-width: 480px;">
+      <h3 class="modal-title" style="color: #6366f1;">⚡ BONUS KUIS LUDORUSH</h3>
+      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">Jawab benar untuk mendapatkan bonus langkah ekstra!</p>
+      <div id="ludo-quiz-q" style="font-weight: 700; font-size: 1.1rem; margin-bottom: 20px; color: #1e1b4b;">—</div>
+      <div id="ludo-quiz-options" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Ludo Winner Podium 🏆 -->
+  <div id="ludo-win-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card glass-card" style="text-align: center; max-width: 450px;">
+      <h2 style="font-size: 1.8rem; font-weight: 900; color: #f59e0b; margin-bottom: 6px;">🏆 PODIUM PEMENANG!</h2>
+      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Selamat kepada para juara LudoRush!</p>
+      <div id="ludo-win-list"></div>
+      <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="document.getElementById('ludo-win-modal').style.display='none';">Tutup &amp; Main Lagi</button>
+    </div>
+  </div>
+
   <!-- Scripts: Firebase SDK (Optional, for Multiplayer) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -484,8 +665,10 @@
   <script src="js/auth.js"></script>
   <script src="js/leaderboard.js"></script>
   <script src="js/quiz.js"></script>
+  <script src="js/ludo.js"></script>
   <script src="js/effects.js"></script>
   <script src="js/app.js"></script>
 
 </body>
 </html>
+
