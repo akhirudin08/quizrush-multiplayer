@@ -189,9 +189,32 @@ const App = {
       // Auto-preload player names from current session if available
       const preload = [];
       const user = Auth.getCurrentUser();
-      if (user) preload.push(user.username);
+      
+      const fillBtn = document.getElementById('btn-fill-room-players');
+      
+      if (this.currentMode === 'multiplayer' && this.roomManager && this.roomManager.room) {
+        // If in a room, preload with room players
+        const onlineNames = this.roomManager.room.players.filter(p => p.isOnline).map(p => p.name);
+        preload.push(...onlineNames);
+        if (fillBtn) fillBtn.style.display = 'block';
+      } else {
+        // Not in room, just current user
+        if (user) preload.push(user.username);
+        if (fillBtn) fillBtn.style.display = 'none';
+      }
+      
       this.spinnerManager.open(preload);
     });
+    
+    document.getElementById('btn-fill-room-players').addEventListener('click', () => {
+      if (this.currentMode === 'multiplayer' && this.roomManager && this.roomManager.room) {
+        const onlineNames = this.roomManager.room.players.filter(p => p.isOnline).map(p => p.name);
+        this.spinnerManager.names = onlineNames;
+        this.spinnerManager.renderNamesList();
+        if (this.spinnerManager.wheel) this.spinnerManager.wheel.setNames(onlineNames);
+      }
+    });
+
     document.getElementById('btn-close-spinner').addEventListener('click', () => this.spinnerManager.close());
     document.getElementById('btn-spin-wheel').addEventListener('click', () => this.spinnerManager.spin());
     document.getElementById('btn-add-spinner-name').addEventListener('click', () => {
