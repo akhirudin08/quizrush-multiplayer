@@ -49,6 +49,12 @@ const LudoGameManager = (() => {
 
     boardContainer.innerHTML = '';
 
+    // Star safe spots coordinates
+    const STAR_COORDS = [
+      {r: 6, c: 1}, {r: 1, c: 8}, {r: 8, c: 13}, {r: 13, c: 6},
+      {r: 2, c: 6}, {r: 6, c: 12}, {r: 12, c: 8}, {r: 8, c: 2}
+    ];
+
     // Create 15x15 cell grid
     for (let r = 0; r < 15; r++) {
       for (let c = 0; c < 15; c++) {
@@ -68,6 +74,17 @@ const LudoGameManager = (() => {
         else if (r > 8 && c < 6) cell.classList.add('zone-blue-base');
         // Center Victory Triangle (6-8, 6-8)
         else if (r >= 6 && r <= 8 && c >= 6 && c <= 8) cell.classList.add('zone-center');
+        
+        // Home stretch paths
+        else if (r === 7 && c >= 1 && c <= 5) cell.classList.add('cell-red-path');
+        else if (c === 7 && r >= 1 && r <= 5) cell.classList.add('cell-green-path');
+        else if (r === 7 && c >= 9 && c <= 13) cell.classList.add('cell-yellow-path');
+        else if (c === 7 && r >= 9 && r <= 13) cell.classList.add('cell-blue-path');
+
+        // Check Star safe spots
+        if (STAR_COORDS.some(st => st.r === r && st.c === c)) {
+          cell.classList.add('cell-star');
+        }
 
         boardContainer.appendChild(cell);
       }
@@ -193,6 +210,44 @@ const LudoGameManager = (() => {
         else if (val === '2human') { state.playerCount = 2; state.botCount = 0; }
         confirmAndStartNewGame();
       });
+    }
+
+    const btnFs = document.getElementById('btn-ludo-fullscreen');
+    if (btnFs) {
+      btnFs.addEventListener('click', () => toggleFullscreen(true));
+    }
+
+    const btnExitFs = document.getElementById('btn-exit-ludo-fullscreen');
+    if (btnExitFs) {
+      btnExitFs.addEventListener('click', () => toggleFullscreen(false));
+    }
+  }
+
+  // Toggle Fullscreen Mobile Arena Mode
+  function toggleFullscreen(enable) {
+    const ludoCard = document.querySelector('#page-ludo .glass-card-full');
+    const banner = document.getElementById('ludo-fullscreen-banner');
+    
+    if (enable) {
+      if (ludoCard) ludoCard.classList.add('ludo-fullscreen-card');
+      if (banner) banner.style.display = 'flex';
+      
+      try {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+      } catch (e) {}
+
+      alert('📱 Mode Layar Penuh (Fullscreen) AKTIF!\n\nPetunjuk: Untuk keluar dari layar penuh, klik tombol "❌ Keluar Layar Penuh" di bagian atas atau tekan tombol ESC/Back di HP Anda.');
+    } else {
+      if (ludoCard) ludoCard.classList.remove('ludo-fullscreen-card');
+      if (banner) banner.style.display = 'none';
+
+      try {
+        if (document.exitFullscreen && document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+      } catch (e) {}
     }
   }
 
@@ -373,14 +428,21 @@ const LudoGameManager = (() => {
   // Highlight Movable Tokens for Human Player
   function highlightMovableTokens(tokens) {
     clearHighlights();
+    logMessage(`👉 Klik bidak berkedip (${tokens.length} pilihan) untuk melangkah!`);
     tokens.forEach(tok => {
       const el = document.getElementById(`token-${state.players[state.currentTurnIndex].color}-${tok.id}`);
       if (el) {
         el.classList.add('token-movable');
-        el.onclick = () => {
+        const executeMove = (e) => {
+          if (e) e.stopPropagation();
           clearHighlights();
           moveToken(tok);
         };
+        el.onclick = executeMove;
+        if (el.parentElement) {
+          el.parentElement.onclick = executeMove;
+          el.parentElement.style.cursor = 'pointer';
+        }
       }
     });
   }
@@ -389,6 +451,7 @@ const LudoGameManager = (() => {
     document.querySelectorAll('.ludo-token').forEach(el => {
       el.classList.remove('token-movable');
       el.onclick = null;
+      if (el.parentElement) el.parentElement.onclick = null;
     });
   }
 

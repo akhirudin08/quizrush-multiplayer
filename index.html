@@ -548,16 +548,23 @@
         <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e1b4b; display: flex; align-items: center; gap: 10px;">
           <span>🎲 LudoRush 4-Player Arena</span>
         </h2>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <select id="ludo-player-config" style="padding: 8px 14px; border-radius: 12px; font-weight: 700; border: 1px solid #cbd5e1;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <select id="ludo-player-config" style="padding: 8px 12px; border-radius: 12px; font-weight: 700; border: 1px solid #cbd5e1; font-size: 0.85rem;">
             <option value="1v3bot">1 Pemain vs 3 Bot AI</option>
             <option value="2v2bot">2 Pemain vs 2 Bot AI</option>
             <option value="4human">4 Pemain Lokal (Turn-based)</option>
             <option value="2human">2 Pemain Lokal</option>
           </select>
-          <button id="btn-toggle-ludo-quiz" class="btn btn-secondary btn-sm active" style="border-radius: 12px;">⚡ Mode Kuis: AKTIF</button>
+          <button id="btn-toggle-ludo-quiz" class="btn btn-secondary btn-sm active" style="border-radius: 12px;">⚡ Kuis: AKTIF ℹ️</button>
+          <button id="btn-ludo-fullscreen" class="btn btn-accent btn-sm" style="border-radius: 12px; background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none;">📱 Layar Penuh</button>
           <button id="btn-ludo-start" class="btn btn-primary btn-sm" style="border-radius: 12px;">🔄 Game Baru</button>
         </div>
+      </div>
+
+      <!-- Top bar message for Fullscreen mode -->
+      <div id="ludo-fullscreen-banner" style="display: none; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); padding: 8px 14px; border-radius: 12px; margin-bottom: 12px; align-items: center; justify-content: space-between; color: #4f46e5; font-size: 0.85rem; font-weight: 700;">
+        <span>📱 Mode Layar Penuh Aktif — Tekan "❌ Keluar Layar Penuh" atau tombol ESC/Back untuk kembali</span>
+        <button id="btn-exit-ludo-fullscreen" class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 0.75rem;">❌ Keluar Layar Penuh</button>
       </div>
 
       <div class="ludo-wrapper">

@@ -510,6 +510,7 @@
 }
 
 .ludo-cell {
+  background: #ffffff;
   border: 0.5px solid #cbd5e1;
   display: flex;
   align-items: center;
@@ -517,11 +518,18 @@
   position: relative;
 }
 
-/* Zone colors */
-.zone-red-base { background: #fee2e2; }
-.zone-green-base { background: #d1fae5; }
-.zone-yellow-base { background: #fef3c7; }
-.zone-blue-base { background: #dbeafe; }
+/* Path lane colors */
+.cell-red-path { background: #fee2e2 !important; }
+.cell-green-path { background: #d1fae5 !important; }
+.cell-yellow-path { background: #fef3c7 !important; }
+.cell-blue-path { background: #dbeafe !important; }
+
+/* Star safe spot icon */
+.cell-star::after {
+  content: '⭐';
+  font-size: clamp(0.6rem, 2vw, 0.95rem);
+  opacity: 0.9;
+}
 
 .zone-center {
   background: conic-gradient(from 45deg, #ef4444 0deg 90deg, #10b981 90deg 180deg, #f59e0b 180deg 270deg, #3b82f6 270deg 360deg);
@@ -533,15 +541,16 @@
 }
 
 .base-box {
-  width: 90%;
-  height: 90%;
+  width: 82%;
+  height: 82%;
   background: #ffffff;
-  border-radius: 12px;
-  border: 2.5px solid;
+  border-radius: 16px;
+  border: 3px solid #1e293b;
   display: flex;
   flex-direction: column;
-  padding: 4px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 6px;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.2);
+  margin: auto;
   overflow: hidden;
 }
 
@@ -566,37 +575,49 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 3px;
+  gap: 4px;
   flex: 1;
 }
 
 .token-slot {
   background: #f1f5f9;
   border-radius: 50%;
-  border: 1px dashed #94a3b8;
+  border: 2px solid #cbd5e1;
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
 }
 
-/* Tokens */
+/* Tokens - Large 3D Pin Tokens like SS #2 */
 .ludo-token {
-  width: clamp(14px, 3.5vw, 22px);
-  height: clamp(14px, 3.5vw, 22px);
+  width: clamp(18px, 4.2vw, 28px);
+  height: clamp(18px, 4.2vw, 28px);
   border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
   position: relative;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.token-red { background: radial-gradient(circle, #f87171, #dc2626); }
-.token-green { background: radial-gradient(circle, #34d399, #059669); }
-.token-yellow { background: radial-gradient(circle, #fbbf24, #d97706); }
-.token-blue { background: radial-gradient(circle, #60a5fa, #2563eb); }
+.ludo-token::after {
+  content: '';
+  width: 35%;
+  height: 35%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.token-red { background: radial-gradient(circle at 35% 35%, #f87171, #dc2626 70%, #991b1b); }
+.token-green { background: radial-gradient(circle at 35% 35%, #34d399, #059669 70%, #065f46); }
+.token-yellow { background: radial-gradient(circle at 35% 35%, #fde047, #d97706 70%, #92400e); }
+.token-blue { background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb 70%, #1e40af); }
 
 .token-movable {
   animation: pulseMovable 0.8s ease-in-out infinite alternate;
