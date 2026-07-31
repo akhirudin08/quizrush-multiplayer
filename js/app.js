@@ -215,12 +215,6 @@ const App = {
             this.currentMode = 'multiplayer';
             this.setupWaitingRoom(code, "Room Spinner Khusus", true);
             this.showPage('waiting');
-            
-            // Auto-open spinner for host after creating
-            setTimeout(() => {
-              const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
-              if (waitingSpinnerBtn) waitingSpinnerBtn.click();
-            }, 300);
           } else {
             alert('Gagal membuat room spinner. Silakan periksa koneksi internet Anda dan coba lagi.');
           }

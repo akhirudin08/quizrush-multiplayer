@@ -81,12 +81,19 @@ html {
 
 body {
   font-family: var(--font-main);
-  background: linear-gradient(145deg, #f0f4ff 0%, #edfff8 45%, #f5f0ff 100%);
-  background-attachment: fixed;
+  background: linear-gradient(-45deg, #f0f4ff, #eaecff, #e0f2fe, #f5f0ff, #edfff8);
+  background-size: 400% 400%;
+  animation: bgGradientAnimation 14s ease infinite;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.6;
+}
+
+@keyframes bgGradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ==========================================

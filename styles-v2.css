@@ -61,23 +61,54 @@
 
 /* Waiting Room */
 .waiting-code-display {
-  background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 20px;
-  text-align: center; margin: 20px 0; border: 1px dashed var(--color-accent);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  text-align: center;
+  margin: 20px 0;
+  border: 2px dashed rgba(99, 102, 241, 0.3);
+  box-shadow: inset 0 2px 12px rgba(99, 102, 241, 0.05);
 }
-.waiting-code-display h2 { font-size: 3rem; letter-spacing: 5px; color: var(--color-secondary-light); margin: 10px 0; font-family: monospace; }
+.waiting-code-display p {
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+}
+.waiting-code-display h2 {
+  font-size: 3.2rem;
+  letter-spacing: 6px;
+  color: #4f46e5;
+  margin: 8px 0 14px 0;
+  font-family: 'Outfit', 'Plus Jakarta Sans', monospace;
+  font-weight: 900;
+  text-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
 .share-link-group { display: flex; gap: 10px; margin-top: 15px; }
-.share-link-group input { flex: 1; padding: 10px; font-size: 0.9rem; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #aaa; border-radius: 6px; }
+.share-link-group input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
 
 .waiting-players-list { margin: 20px 0; max-height: 300px; overflow-y: auto; }
 .waiting-player-row {
   display: flex; align-items: center; padding: 12px 15px;
-  background: var(--bg-glass); border-radius: var(--radius-sm); margin-bottom: 8px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-md); margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.04);
 }
 .waiting-player-avatar { margin-right: 15px; }
-.waiting-player-name { flex: 1; font-weight: 600; font-size: 1.1rem; }
+.waiting-player-name { flex: 1; font-weight: 700; font-size: 1.05rem; color: #0f172a; }
 .waiting-player-status.online { color: var(--color-success); }
 .waiting-player-status.offline { color: var(--color-danger); opacity: 0.5; }
-.host-label { text-align: center; color: var(--color-warning); font-weight: bold; margin-bottom: 15px; }
+.host-label { text-align: center; color: #d97706; font-weight: 800; font-size: 0.95rem; margin-bottom: 15px; }
 
 /* Quiz Creator */
 .creator-container { text-align: left; max-height: 70vh; overflow-y: auto; padding-right: 10px; }
