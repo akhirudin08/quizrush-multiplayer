@@ -1626,12 +1626,12 @@ const App = {
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
 
     let isRolling = false;
-    let currentRotationX = 0;
-    let currentRotationY = 0;
+    let rollCount = 0;
 
     const roll = () => {
       if (isRolling) return;
       isRolling = true;
+      rollCount++;
       resultDisplay.textContent = '🎲 Mengocok dadu...';
       if (typeof Sounds !== 'undefined') Sounds.play('tick');
 
@@ -1647,10 +1647,10 @@ const App = {
       };
 
       const targetRot = faceRotations[randValue];
-      currentRotationX += 720 + targetRot.x;
-      currentRotationY += 720 + targetRot.y;
+      const finalX = (rollCount * 1440) + targetRot.x;
+      const finalY = (rollCount * 1440) + targetRot.y;
 
-      diceCube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+      diceCube.style.transform = `rotateX(${finalX}deg) rotateY(${finalY}deg)`;
 
       setTimeout(() => {
         isRolling = false;
