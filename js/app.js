@@ -184,6 +184,49 @@ const App = {
     document.getElementById('btn-join-arena').addEventListener('click', () => this.showPage('join'));
     document.getElementById('btn-logout').addEventListener('click', () => this.handleLogout());
 
+    // Create Spinner Room directly
+    const createSpinnerBtn = document.getElementById('btn-create-spinner-room');
+    if (createSpinnerBtn) {
+      createSpinnerBtn.addEventListener('click', async () => {
+        if (!isMultiplayerAvailable()) {
+          alert('Firebase belum dikonfigurasi!');
+          return;
+        }
+        
+        const user = Auth.getCurrentUser();
+        const originalText = createSpinnerBtn.innerHTML;
+        createSpinnerBtn.innerHTML = '⏳ Membuat Room...';
+        createSpinnerBtn.disabled = true;
+
+        const dummyQuiz = {
+          title: "Room Spinner Khusus",
+          type: "spinner-only",
+          questions: []
+        };
+
+        const code = await this.roomManager.createRoom(dummyQuiz, {
+          id: user.id,
+          name: user.username,
+          avatarId: user.avatarId
+        });
+
+        createSpinnerBtn.innerHTML = originalText;
+        createSpinnerBtn.disabled = false;
+
+        if (code) {
+          this.currentMode = 'multiplayer';
+          this.setupWaitingRoom(code, "Room Spinner Khusus", true);
+          this.showPage('waiting');
+          
+          // Auto-open spinner for host after creating
+          setTimeout(() => {
+            const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
+            if (waitingSpinnerBtn) waitingSpinnerBtn.click();
+          }, 300);
+        }
+      });
+    }
+
     // Spin the Wheel
     const openSpinnerHandler = () => {
       // Auto-preload player names from current session if available
@@ -838,7 +881,8 @@ const App = {
 
     // Show/hide host controls
     const startBtn = document.getElementById('btn-start-arena');
-    startBtn.style.display = isHost ? 'block' : 'none';
+    const isSpinnerOnly = title === "Room Spinner Khusus" || title === "Room Spinner";
+    startBtn.style.display = (isHost && !isSpinnerOnly) ? 'block' : 'none';
 
     const hostLabel = document.getElementById('waiting-host-label');
     if (hostLabel) {
