@@ -1420,9 +1420,9 @@ const App = {
     function createParticle() {
       return {
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1, speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5, opacity: Math.random() * 0.5 + 0.1,
-        hue: Math.random() * 60 + 220
+        size: Math.random() * 2.5 + 0.5, speedX: (Math.random() - 0.5) * 0.4,
+        speedY: (Math.random() - 0.5) * 0.4, opacity: Math.random() * 0.6 + 0.2,
+        hue: Math.random() * 40 + 240  // indigo-violet range 240–280
       };
     }
 
@@ -1432,7 +1432,7 @@ const App = {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, ${p.opacity})`; ctx.fill();
+        ctx.fillStyle = `hsla(${p.hue}, 65%, 55%, ${p.opacity * 0.45})`; ctx.fill();
         p.x += p.speedX; p.y += p.speedY;
         if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
@@ -1442,7 +1442,7 @@ const App = {
           const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 120) {
-            ctx.beginPath(); ctx.strokeStyle = `hsla(250, 70%, 60%, ${0.15 * (1 - dist / 120)})`;
+            ctx.beginPath(); ctx.strokeStyle = `hsla(240, 65%, 55%, ${0.08 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.5; ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
           }
