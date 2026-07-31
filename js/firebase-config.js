@@ -66,10 +66,10 @@ function isMultiplayerAvailable() {
 // ==========================================
 
 const FireDB = {
-  withTimeout(promise, ms = 8000) {
+  withTimeout(promise, ms = 4000) {
     return Promise.race([
       promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Koneksi database timeout')), ms))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Realtime Database belum dibuat/aktif di Firebase Console atau koneksi bermasalah.')), ms))
     ]);
   },
 
