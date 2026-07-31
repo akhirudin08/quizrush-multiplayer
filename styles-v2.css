@@ -142,3 +142,46 @@
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
 
 .label-hint { font-size: 0.8rem; font-weight: normal; color: var(--text-muted); }
+
+/* 🎲 3D Dice Roller Styles */
+.dice-cube {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+  margin: 0 auto;
+}
+
+.dice-face {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(145deg, #ffffff, #f8faff);
+  border: 2px solid #cbd5e1;
+  border-radius: 18px;
+  box-shadow: inset 0 0 8px rgba(99,102,241,0.1), 0 8px 24px rgba(99,102,241,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+}
+
+.dice-face span {
+  width: 16px;
+  height: 16px;
+  background: #6366f1;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+}
+
+.face-1 { transform: translateZ(50px); justify-content: center; align-items: center; }
+.face-2 { transform: rotateY(180deg) translateZ(50px); justify-content: space-between; align-items: center; }
+.face-3 { transform: rotateY(-90deg) translateZ(50px); flex-direction: row; justify-content: space-between; align-items: center; }
+.face-4 { transform: rotateY(90deg) translateZ(50px); }
+.face-5 { transform: rotateX(90deg) translateZ(50px); }
+.face-6 { transform: rotateX(-90deg) translateZ(50px); }
+
+.dot-row { display: flex; width: 100%; justify-content: space-between; }
+.dot-row.center { justify-content: center; }

@@ -56,6 +56,7 @@ const App = {
     this.bindEvents();
     this.initParticles();
     this.initAvatarPicker();
+    this.initDiceRoller();
 
     // Check URL params for auto-join
     const urlParams = new URLSearchParams(window.location.search);
@@ -1604,6 +1605,62 @@ const App = {
   shakeElement(el) {
     el.classList.add('shake');
     setTimeout(() => el.classList.remove('shake'), 600);
+  },
+
+  // ==========================================
+  // 🎲 3D Dice Roller
+  // ==========================================
+  initDiceRoller() {
+    const diceBtn = document.getElementById('btn-dice-roller');
+    const modal = document.getElementById('dice-modal');
+    const closeBtn = document.getElementById('btn-close-dice');
+    const rollBtn = document.getElementById('btn-roll-dice');
+    const diceCube = document.getElementById('dice-cube');
+    const diceContainer = document.getElementById('dice-container');
+    const resultDisplay = document.getElementById('dice-result-display');
+
+    if (!diceBtn || !modal) return;
+
+    diceBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
+    closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+    let isRolling = false;
+    let currentRotationX = 0;
+    let currentRotationY = 0;
+
+    const roll = () => {
+      if (isRolling) return;
+      isRolling = true;
+      resultDisplay.textContent = '🎲 Mengocok dadu...';
+      if (typeof Sounds !== 'undefined') Sounds.play('tick');
+
+      const randValue = Math.floor(Math.random() * 6) + 1;
+      
+      const faceRotations = {
+        1: { x: 0, y: 0 },
+        2: { x: 0, y: 180 },
+        3: { x: 0, y: 90 },
+        4: { x: 0, y: -90 },
+        5: { x: -90, y: 0 },
+        6: { x: 90, y: 0 }
+      };
+
+      const targetRot = faceRotations[randValue];
+      currentRotationX += 720 + targetRot.x;
+      currentRotationY += 720 + targetRot.y;
+
+      diceCube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+
+      setTimeout(() => {
+        isRolling = false;
+        resultDisplay.textContent = `🎉 Hasil Dadu: ${randValue}!`;
+        if (typeof Sounds !== 'undefined') Sounds.play('finish');
+      }, 1200);
+    };
+
+    rollBtn.addEventListener('click', roll);
+    diceContainer.addEventListener('click', roll);
   }
 };
 
