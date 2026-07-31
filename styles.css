@@ -97,7 +97,7 @@ body {
 }
 
 /* ==========================================
-   Particle Canvas Background
+   Particle & Ambient Blob Canvas Background
    ========================================== */
 #particles-canvas {
   position: fixed;
@@ -107,7 +107,61 @@ body {
   height: 100%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.25;
+  opacity: 0.35;
+}
+
+.bg-blobs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.6;
+  animation: floatBlob 18s ease-in-out infinite alternate;
+}
+
+.blob-1 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, rgba(168, 85, 247, 0.2) 100%);
+  top: -10%;
+  left: -10%;
+  animation-duration: 16s;
+}
+
+.blob-2 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(59, 130, 246, 0.15) 100%);
+  bottom: -15%;
+  right: -10%;
+  animation-duration: 22s;
+  animation-delay: -5s;
+}
+
+.blob-3 {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(245, 158, 11, 0.15) 100%);
+  top: 35%;
+  left: 50%;
+  animation-duration: 20s;
+  animation-delay: -10s;
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(70px, 50px) scale(1.15); }
+  100% { transform: translate(-50px, 90px) scale(0.92); }
 }
 
 /* ==========================================
