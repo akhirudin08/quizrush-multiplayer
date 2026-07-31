@@ -1308,21 +1308,52 @@ const App = {
   },
 
   renderStats(results) {
+    // SVG icons for each stat card
+    const svgTrophy = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+    const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+    const svgChart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`;
+    const svgClock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    const svgFlame = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`;
+
     this.elements.resultsStats.innerHTML = `
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value">${results.score.toLocaleString()}</div><div class="stat-label">Total Skor</div></div>
-        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value">${results.correctAnswers}/${results.totalQuestions}</div><div class="stat-label">Jawaban Benar</div></div>
-        <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-value">${results.accuracy}%</div><div class="stat-label">Akurasi</div></div>
-        <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">${results.averageTime}s</div><div class="stat-label">Rata-rata Waktu</div></div>
-        <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value">${results.maxStreak}x</div><div class="stat-label">Streak Terbaik</div></div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--trophy">${svgTrophy}</div>
+          <div class="stat-value">${results.score.toLocaleString()}</div>
+          <div class="stat-label">Total Skor</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--check">${svgCheck}</div>
+          <div class="stat-value">${results.correctAnswers}/${results.totalQuestions}</div>
+          <div class="stat-label">Jawaban Benar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--chart">${svgChart}</div>
+          <div class="stat-value">${results.accuracy}%</div>
+          <div class="stat-label">Akurasi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--clock">${svgClock}</div>
+          <div class="stat-value">${results.averageTime}s</div>
+          <div class="stat-label">Rata-rata Waktu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon stat-icon--flame">${svgFlame}</div>
+          <div class="stat-value">${results.maxStreak}x</div>
+          <div class="stat-label">Streak Terbaik</div>
+        </div>
       </div>
     `;
   },
 
   renderBreakdown(results) {
+    const iconCorrect = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const iconTimeout = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    const iconWrong   = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
     this.elements.resultsBreakdown.innerHTML = results.answers.map((answer, idx) => {
       const q = results.questions[idx];
-      const icon = answer.isCorrect ? '✅' : answer.timedOut ? '⏰' : '❌';
+      const icon = answer.isCorrect ? iconCorrect : answer.timedOut ? iconTimeout : iconWrong;
       return `
         <div class="breakdown-row ${answer.isCorrect ? 'breakdown-correct' : 'breakdown-wrong'}">
           <span class="breakdown-num">${idx + 1}.</span>
@@ -1342,7 +1373,10 @@ const App = {
     const el = this.elements.resultsBreakdown;
     const btn = document.getElementById('btn-toggle-breakdown');
     el.classList.toggle('visible');
-    btn.textContent = el.classList.contains('visible') ? '📋 Sembunyikan Detail' : '📋 Lihat Detail Jawaban';
+    const isVisible = el.classList.contains('visible');
+    btn.innerHTML = isVisible
+      ? `<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Sembunyikan Detail`
+      : `<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Lihat Detail Jawaban`;
   },
 
   // ==========================================
