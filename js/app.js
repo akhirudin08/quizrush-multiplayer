@@ -193,36 +193,43 @@ const App = {
           return;
         }
         
-        const user = Auth.getCurrentUser();
+        const user = Auth.getCurrentUser() || { id: 'user_' + Date.now(), username: 'Pemain', avatarId: 0 };
         const originalText = createSpinnerBtn.innerHTML;
         createSpinnerBtn.innerHTML = '⏳ Membuat Room...';
         createSpinnerBtn.disabled = true;
 
-        const dummyQuiz = {
-          title: "Room Spinner Khusus",
-          type: "spinner-only",
-          questions: []
-        };
+        try {
+          const dummyQuiz = {
+            title: "Room Spinner Khusus",
+            type: "spinner-only",
+            questions: []
+          };
 
-        const code = await this.roomManager.createRoom(dummyQuiz, {
-          id: user.id,
-          name: user.username,
-          avatarId: user.avatarId
-        });
+          const code = await this.roomManager.createRoom(dummyQuiz, {
+            id: user.id,
+            name: user.username,
+            avatarId: user.avatarId
+          });
 
-        createSpinnerBtn.innerHTML = originalText;
-        createSpinnerBtn.disabled = false;
-
-        if (code) {
-          this.currentMode = 'multiplayer';
-          this.setupWaitingRoom(code, "Room Spinner Khusus", true);
-          this.showPage('waiting');
-          
-          // Auto-open spinner for host after creating
-          setTimeout(() => {
-            const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
-            if (waitingSpinnerBtn) waitingSpinnerBtn.click();
-          }, 300);
+          if (code) {
+            this.currentMode = 'multiplayer';
+            this.setupWaitingRoom(code, "Room Spinner Khusus", true);
+            this.showPage('waiting');
+            
+            // Auto-open spinner for host after creating
+            setTimeout(() => {
+              const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
+              if (waitingSpinnerBtn) waitingSpinnerBtn.click();
+            }, 300);
+          } else {
+            alert('Gagal membuat room spinner. Silakan periksa koneksi internet Anda dan coba lagi.');
+          }
+        } catch (err) {
+          console.error('Error creating spinner room:', err);
+          alert('Gagal membuat room: ' + (err.message || 'Terjadi kesalahan jaringan'));
+        } finally {
+          createSpinnerBtn.innerHTML = originalText;
+          createSpinnerBtn.disabled = false;
         }
       });
     }

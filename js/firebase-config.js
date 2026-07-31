@@ -66,13 +66,20 @@ function isMultiplayerAvailable() {
 // ==========================================
 
 const FireDB = {
+  withTimeout(promise, ms = 8000) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Koneksi database timeout')), ms))
+    ]);
+  },
+
   /**
    * Write data to a path
    */
   async set(path, data) {
     if (!db) return null;
     try {
-      await db.ref(path).set(data);
+      await this.withTimeout(db.ref(path).set(data));
       return true;
     } catch (e) {
       console.error('DB set error:', e);
@@ -86,7 +93,7 @@ const FireDB = {
   async update(path, data) {
     if (!db) return null;
     try {
-      await db.ref(path).update(data);
+      await this.withTimeout(db.ref(path).update(data));
       return true;
     } catch (e) {
       console.error('DB update error:', e);
@@ -100,7 +107,7 @@ const FireDB = {
   async get(path) {
     if (!db) return null;
     try {
-      const snapshot = await db.ref(path).once('value');
+      const snapshot = await this.withTimeout(db.ref(path).once('value'));
       return snapshot.val();
     } catch (e) {
       console.error('DB get error:', e);
