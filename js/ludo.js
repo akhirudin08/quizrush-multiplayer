@@ -20,7 +20,6 @@ const LudoGameManager = (() => {
   // Internal Game State
   let state = {
     active: false,
-    quizMode: true,
     playerCount: 4,
     botCount: 3,
     currentTurnIndex: 0,
@@ -58,25 +57,21 @@ const LudoGameManager = (() => {
     // Create 15x15 cell grid
     for (let r = 0; r < 15; r++) {
       for (let c = 0; c < 15; c++) {
+        // Skip base and center zones (will be created as large blocks below)
+        if ((r < 6 && c < 6) || (r < 6 && c > 8) || (r > 8 && c > 8) || (r > 8 && c < 6) || (r >= 6 && r <= 8 && c >= 6 && c <= 8)) {
+          continue;
+        }
+
         const cell = document.createElement('div');
         cell.className = 'ludo-cell';
         cell.dataset.row = r;
         cell.dataset.col = c;
-        
-        // Define special regions
-        // Top-Left: Red Base (0-5, 0-5)
-        if (r < 6 && c < 6) cell.classList.add('zone-red-base');
-        // Top-Right: Green Base (0-5, 9-14)
-        else if (r < 6 && c > 8) cell.classList.add('zone-green-base');
-        // Bottom-Right: Yellow Base (9-14, 9-14)
-        else if (r > 8 && c > 8) cell.classList.add('zone-yellow-base');
-        // Bottom-Left: Blue Base (9-14, 0-5)
-        else if (r > 8 && c < 6) cell.classList.add('zone-blue-base');
-        // Center Victory Triangle (6-8, 6-8)
-        else if (r >= 6 && r <= 8 && c >= 6 && c <= 8) cell.classList.add('zone-center');
+        // Explicitly set grid row and column (1-indexed for CSS Grid)
+        cell.style.gridRow = r + 1;
+        cell.style.gridColumn = c + 1;
         
         // Home stretch paths
-        else if (r === 7 && c >= 1 && c <= 5) cell.classList.add('cell-red-path');
+        if (r === 7 && c >= 1 && c <= 5) cell.classList.add('cell-red-path');
         else if (c === 7 && r >= 1 && r <= 5) cell.classList.add('cell-green-path');
         else if (r === 7 && c >= 9 && c <= 13) cell.classList.add('cell-yellow-path');
         else if (c === 7 && r >= 9 && r <= 13) cell.classList.add('cell-blue-path');
@@ -86,9 +81,32 @@ const LudoGameManager = (() => {
           cell.classList.add('cell-star');
         }
 
+        // Color starting cells
+        if (r === 6 && c === 1) cell.classList.add('cell-red-start');
+        else if (r === 1 && c === 8) cell.classList.add('cell-green-start');
+        else if (r === 8 && c === 13) cell.classList.add('cell-yellow-start');
+        else if (r === 13 && c === 6) cell.classList.add('cell-blue-start');
+
         boardContainer.appendChild(cell);
       }
     }
+
+    // Add Base Zones as large grid areas
+    const bases = [
+      { id: 'zone-red-base', class: 'zone-red-base', area: '1 / 1 / 7 / 7' },
+      { id: 'zone-green-base', class: 'zone-green-base', area: '1 / 10 / 7 / 16' },
+      { id: 'zone-yellow-base', class: 'zone-yellow-base', area: '10 / 10 / 16 / 16' },
+      { id: 'zone-blue-base', class: 'zone-blue-base', area: '10 / 1 / 16 / 7' },
+      { id: 'zone-center', class: 'zone-center', area: '7 / 7 / 10 / 10' }
+    ];
+
+    bases.forEach(b => {
+      const el = document.createElement('div');
+      el.className = b.class;
+      el.id = b.id;
+      el.style.gridArea = b.area;
+      boardContainer.appendChild(el);
+    });
 
     renderBases();
   }
@@ -96,14 +114,11 @@ const LudoGameManager = (() => {
   // Render player home bases with token slots
   function renderBases() {
     PLAYERS_CONFIG.forEach(cfg => {
-      const baseArea = document.querySelector(`.zone-${cfg.color}-base`);
+      const baseArea = document.getElementById(`zone-${cfg.color}-base`);
       if (baseArea && !baseArea.querySelector('.base-box')) {
         const baseBox = document.createElement('div');
         baseBox.className = `base-box base-box-${cfg.color}`;
         baseBox.innerHTML = `
-          <div class="base-header">
-            <span class="base-player-name" id="ludo-name-${cfg.color}">Pemain</span>
-          </div>
           <div class="base-slots">
             <div class="token-slot" id="slot-${cfg.color}-0"></div>
             <div class="token-slot" id="slot-${cfg.color}-1"></div>
@@ -186,18 +201,6 @@ const LudoGameManager = (() => {
     if (diceDisplay) {
       diceDisplay.style.cursor = 'pointer';
       diceDisplay.addEventListener('click', onHumanRollDice);
-    }
-
-    const btnToggleQuiz = document.getElementById('btn-toggle-ludo-quiz');
-    if (btnToggleQuiz) {
-      btnToggleQuiz.addEventListener('click', () => {
-        state.quizMode = !state.quizMode;
-        btnToggleQuiz.classList.toggle('active', state.quizMode);
-        btnToggleQuiz.innerHTML = state.quizMode ? '⚡ Mode Kuis: AKTIF ℹ️' : '🎲 Mode Kuis: NONAKTIF';
-        alert(state.quizMode 
-          ? '⚡ Mode Kuis LudoRush: AKTIF!\nSaat dapat Dadu 6 atau memakan bidak lawan, Jawab Kuis Kilat dengan benar untuk dapat BONUS +2 LANGKAH EKSTRA!' 
-          : '🎲 Mode Kuis LudoRush: NONAKTIF.\nPermainan Ludo berlangsung standar tanpa tantangan kuis.');
-      });
     }
 
     const modeSelect = document.getElementById('ludo-player-config');

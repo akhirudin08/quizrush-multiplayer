@@ -541,52 +541,37 @@
 }
 
 .base-box {
-  width: 82%;
-  height: 82%;
+  width: 70%;
+  height: 70%;
   background: #ffffff;
-  border-radius: 16px;
-  border: 3px solid #1e293b;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  padding: 6px;
-  box-shadow: inset 0 4px 10px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.2);
+  padding: 8%;
   margin: auto;
-  overflow: hidden;
-}
-
-.base-box-red { border-color: var(--ludo-red); }
-.base-box-green { border-color: var(--ludo-green); }
-.base-box-yellow { border-color: var(--ludo-yellow); }
-.base-box-blue { border-color: var(--ludo-blue); }
-
-.base-header {
-  font-size: clamp(0.55rem, 1.8vw, 0.75rem);
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 3px;
-  color: #1e293b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .base-slots {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 4px;
+  gap: 15%;
   flex: 1;
+  width: 100%;
+  height: 100%;
 }
 
 .token-slot {
-  background: #f1f5f9;
+  background: transparent;
   border-radius: 50%;
   border: 2px solid #cbd5e1;
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 /* Tokens - Large 3D Pin Tokens like SS #2 */
