@@ -271,6 +271,29 @@
   margin-top: 10px;
 }
 
+.lobby-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .studio-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px;
+  }
+  
+  .studio-xp-bar {
+    width: 120px;
+  }
+
+  .lobby-history-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .game-card {
   background: #ffffff;
   border: 1.5px solid rgba(226, 232, 240, 0.8);
