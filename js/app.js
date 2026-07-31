@@ -185,7 +185,7 @@ const App = {
     document.getElementById('btn-logout').addEventListener('click', () => this.handleLogout());
 
     // Spin the Wheel
-    document.getElementById('btn-spin-wheel-lobby').addEventListener('click', () => {
+    const openSpinnerHandler = () => {
       // Auto-preload player names from current session if available
       const preload = [];
       const user = Auth.getCurrentUser();
@@ -204,7 +204,15 @@ const App = {
       }
       
       this.spinnerManager.open(preload);
-    });
+    };
+
+    document.getElementById('btn-spin-wheel-lobby').addEventListener('click', openSpinnerHandler);
+    
+    // Check if the waiting room spinner button exists, then add listener
+    const waitingSpinnerBtn = document.getElementById('btn-spin-wheel-waiting');
+    if (waitingSpinnerBtn) {
+      waitingSpinnerBtn.addEventListener('click', openSpinnerHandler);
+    }
     
     document.getElementById('btn-fill-room-players').addEventListener('click', () => {
       if (this.currentMode === 'multiplayer' && this.roomManager && this.roomManager.room) {

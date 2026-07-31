@@ -238,7 +238,12 @@
         </div>
       </div>
 
-      <h3>Daftar Pemain (<span id="waiting-player-count">1</span>)</h3>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="margin: 0;">Daftar Pemain (<span id="waiting-player-count">1</span>)</h3>
+        <button id="btn-spin-wheel-waiting" class="btn btn-primary btn-sm" style="padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(99,102,241,0.25);">
+          <svg class="icon-svg" style="margin-right:4px; width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 12l4.5-7.8"/><circle cx="12" cy="12" r="2"/></svg> Spin Wheel
+        </button>
+      </div>
       <div id="waiting-players-list" class="waiting-players-list">
         <!-- Injected dynamically -->
       </div>
