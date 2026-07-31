@@ -157,7 +157,7 @@ const LudoGameManager = (() => {
   function setupEventListeners() {
     const btnStartGame = document.getElementById('btn-ludo-start');
     if (btnStartGame) {
-      btnStartGame.addEventListener('click', startNewGame);
+      btnStartGame.addEventListener('click', confirmAndStartNewGame);
     }
 
     const btnRollDice = document.getElementById('btn-ludo-roll');
@@ -165,12 +165,21 @@ const LudoGameManager = (() => {
       btnRollDice.addEventListener('click', onHumanRollDice);
     }
 
+    const diceDisplay = document.getElementById('ludo-dice-box');
+    if (diceDisplay) {
+      diceDisplay.style.cursor = 'pointer';
+      diceDisplay.addEventListener('click', onHumanRollDice);
+    }
+
     const btnToggleQuiz = document.getElementById('btn-toggle-ludo-quiz');
     if (btnToggleQuiz) {
       btnToggleQuiz.addEventListener('click', () => {
         state.quizMode = !state.quizMode;
         btnToggleQuiz.classList.toggle('active', state.quizMode);
-        btnToggleQuiz.innerHTML = state.quizMode ? '⚡ Mode Kuis: AKTIF' : '🎲 Mode Kuis: NONAKTIF';
+        btnToggleQuiz.innerHTML = state.quizMode ? '⚡ Mode Kuis: AKTIF ℹ️' : '🎲 Mode Kuis: NONAKTIF';
+        alert(state.quizMode 
+          ? '⚡ Mode Kuis LudoRush: AKTIF!\nSaat dapat Dadu 6 atau memakan bidak lawan, Jawab Kuis Kilat dengan benar untuk dapat BONUS +2 LANGKAH EKSTRA!' 
+          : '🎲 Mode Kuis LudoRush: NONAKTIF.\nPermainan Ludo berlangsung standar tanpa tantangan kuis.');
       });
     }
 
@@ -182,8 +191,21 @@ const LudoGameManager = (() => {
         else if (val === '2v2bot') { state.playerCount = 4; state.botCount = 2; }
         else if (val === '4human') { state.playerCount = 4; state.botCount = 0; }
         else if (val === '2human') { state.playerCount = 2; state.botCount = 0; }
+        confirmAndStartNewGame();
       });
     }
+  }
+
+  // Confirmation before restarting an active match
+  function confirmAndStartNewGame() {
+    if (state.active && state.players && state.players.length > 0) {
+      const hasMoves = state.players.some(p => p.tokens.some(t => t.stepCount > -1));
+      if (hasMoves) {
+        const confirmReset = confirm('⚡ Game Ludo sedang berjalan! Apakah Anda yakin ingin memulai Game Baru dari awal?');
+        if (!confirmReset) return;
+      }
+    }
+    startNewGame();
   }
 
   // Start a New Game Session
@@ -243,7 +265,7 @@ const LudoGameManager = (() => {
       if (nameEl) nameEl.innerHTML = `${PLAYERS_CONFIG.find(c=>c.color===color).badge} ${name}`;
     });
 
-    logMessage(`🎮 Game Ludo Dimulai! Giliran ${state.players[0].name}.`);
+    logMessage(`🎮 Game Ludo Dimulai! Giliran ${state.players[0].name}. Klik kocok dadu!`);
     renderTokens();
     updateTurnUI();
 
@@ -258,8 +280,13 @@ const LudoGameManager = (() => {
 
   // Handle Human Clicking Roll Dice
   function onHumanRollDice() {
+    if (!state.active) {
+      startNewGame();
+      setTimeout(rollDice, 300);
+      return;
+    }
     const curPlayer = state.players[state.currentTurnIndex];
-    if (!state.active || curPlayer.isBot || state.diceRolled || state.isRolling) return;
+    if (!curPlayer || curPlayer.isBot || state.diceRolled || state.isRolling) return;
 
     rollDice();
   }
@@ -439,7 +466,7 @@ const LudoGameManager = (() => {
 
         // Trigger Quiz Bonus popup if Quiz Mode is ON
         if (state.quizMode && !curPlayer.isBot) {
-          showLudoQuizBonus(() => {
+          showLudoQuizBonus(token, () => {
             resetForNextTurn(true);
           });
           return;
@@ -607,7 +634,7 @@ const LudoGameManager = (() => {
   }
 
   // Trigger Ludo Quiz Bonus Modal
-  function showLudoQuizBonus(callback) {
+  function showLudoQuizBonus(movedToken, callback) {
     const quizModal = document.getElementById('ludo-quiz-modal');
     if (!quizModal || !window.QuestionsManager) {
       if (callback) callback();
@@ -626,14 +653,21 @@ const LudoGameManager = (() => {
     q.options.forEach((optText, index) => {
       const btn = document.createElement('button');
       btn.className = 'btn btn-secondary ludo-quiz-opt';
+      btn.style.cssText = 'padding: 12px; margin: 4px 0; border-radius: 10px; font-weight: 600; font-size: 0.95rem; text-align: left;';
       btn.textContent = optText;
       btn.onclick = () => {
         quizModal.style.display = 'none';
         if (index === q.correctAnswer) {
-          logMessage(`⚡ KUIS BENAR! Dapatkan bonus langkah ekstra!`);
+          if (movedToken && movedToken.stepCount >= 0 && movedToken.stepCount < 56) {
+            movedToken.stepCount = Math.min(56, movedToken.stepCount + 2);
+            renderTokens();
+            logMessage(`⚡ KUIS BENAR! Bidak Anda maju +2 LANGKAH BONUS EKSTRA! 🚀`);
+          } else {
+            logMessage(`⚡ KUIS BENAR! Jawaban tepat!`);
+          }
           if (window.Sounds) Sounds.play('correct');
         } else {
-          logMessage(`❌ Jawaban kurang tepat.`);
+          logMessage(`❌ Jawaban kuis kurang tepat.`);
           if (window.Sounds) Sounds.play('wrong');
         }
         if (callback) callback();

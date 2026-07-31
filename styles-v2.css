@@ -501,7 +501,7 @@
 .zone-blue-base { background: #dbeafe; }
 
 .zone-center {
-  background: conic-gradient(#ef4444 0deg 90deg, #10b981 90deg 180deg, #f59e0b 180deg 270deg, #3b82f6 270deg 360deg);
+  background: conic-gradient(from 45deg, #ef4444 0deg 90deg, #10b981 90deg 180deg, #f59e0b 180deg 270deg, #3b82f6 270deg 360deg);
   border: 2px solid #1e293b;
   display: flex;
   flex-wrap: wrap;
@@ -510,15 +510,16 @@
 }
 
 .base-box {
-  width: 85%;
-  height: 85%;
+  width: 90%;
+  height: 90%;
   background: #ffffff;
-  border-radius: 14px;
-  border: 3px solid;
+  border-radius: 12px;
+  border: 2.5px solid;
   display: flex;
   flex-direction: column;
-  padding: 6px;
+  padding: 4px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
 }
 
 .base-box-red { border-color: var(--ludo-red); }
@@ -527,18 +528,22 @@
 .base-box-blue { border-color: var(--ludo-blue); }
 
 .base-header {
-  font-size: 0.75rem;
+  font-size: clamp(0.55rem, 1.8vw, 0.75rem);
   font-weight: 800;
   text-align: center;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .base-slots {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
 }
 
@@ -549,15 +554,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 1 / 1;
 }
 
 /* Tokens */
 .ludo-token {
-  width: 22px;
-  height: 22px;
+  width: clamp(14px, 3.5vw, 22px);
+  height: clamp(14px, 3.5vw, 22px);
   border-radius: 50%;
   border: 2px solid #ffffff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
   position: relative;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
