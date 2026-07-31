@@ -14,7 +14,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyCVlcRi0Cgt5Vnf4zDvV4jm7MPvrsTsn88",
   authDomain: "quizrush-multiplayer.firebaseapp.com",
-  databaseURL: "https://quizrush-multiplayer-default-rtdb.firebaseio.com",
+  databaseURL: "https://quizrush-multiplayer-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "quizrush-multiplayer",
   storageBucket: "quizrush-multiplayer.firebasestorage.app",
   messagingSenderId: "724623173331",
