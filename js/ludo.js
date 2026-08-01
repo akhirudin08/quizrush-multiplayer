@@ -8,10 +8,10 @@
 const LudoGameManager = (() => {
   // Player Color Configuration
   const PLAYERS_CONFIG = [
-    { color: 'red', name: 'Merah', badge: '🔴', startPos: 0, homeEntryPos: 50, homeBaseId: 'red-base' },
-    { color: 'green', name: 'Hijau', badge: '🟢', startPos: 13, homeEntryPos: 11, homeBaseId: 'green-base' },
-    { color: 'yellow', name: 'Kuning', badge: '🟡', startPos: 26, homeEntryPos: 24, homeBaseId: 'yellow-base' },
-    { color: 'blue', name: 'Biru', badge: '🔵', startPos: 39, homeEntryPos: 37, homeBaseId: 'blue-base' }
+    { color: 'green', name: 'Hijau', badge: '🟢', startPos: 0, homeEntryPos: 50, homeBaseId: 'green-base' },
+    { color: 'yellow', name: 'Kuning', badge: '🟡', startPos: 13, homeEntryPos: 11, homeBaseId: 'yellow-base' },
+    { color: 'blue', name: 'Biru', badge: '🔵', startPos: 26, homeEntryPos: 24, homeBaseId: 'blue-base' },
+    { color: 'red', name: 'Merah', badge: '🔴', startPos: 39, homeEntryPos: 37, homeBaseId: 'red-base' }
   ];
 
   // 52 Main Track Squares + Safe Spots (Indexes: 0, 8, 13, 21, 26, 34, 39, 47)
@@ -71,10 +71,10 @@ const LudoGameManager = (() => {
         cell.style.gridColumn = c + 1;
         
         // Home stretch paths
-        if (r === 7 && c >= 1 && c <= 5) cell.classList.add('cell-red-path');
-        else if (c === 7 && r >= 1 && r <= 5) cell.classList.add('cell-green-path');
-        else if (r === 7 && c >= 9 && c <= 13) cell.classList.add('cell-yellow-path');
-        else if (c === 7 && r >= 9 && r <= 13) cell.classList.add('cell-blue-path');
+        if (r === 7 && c >= 1 && c <= 5) cell.classList.add('cell-green-path');
+        else if (c === 7 && r >= 1 && r <= 5) cell.classList.add('cell-yellow-path');
+        else if (r === 7 && c >= 9 && c <= 13) cell.classList.add('cell-blue-path');
+        else if (c === 7 && r >= 9 && r <= 13) cell.classList.add('cell-red-path');
 
         // Check Star safe spots
         if (STAR_COORDS.some(st => st.r === r && st.c === c)) {
@@ -82,21 +82,21 @@ const LudoGameManager = (() => {
         }
 
         // Color starting cells
-        if (r === 6 && c === 1) cell.classList.add('cell-red-start');
-        else if (r === 1 && c === 8) cell.classList.add('cell-green-start');
-        else if (r === 8 && c === 13) cell.classList.add('cell-yellow-start');
-        else if (r === 13 && c === 6) cell.classList.add('cell-blue-start');
+        if (r === 6 && c === 1) cell.classList.add('cell-green-start');
+        else if (r === 1 && c === 8) cell.classList.add('cell-yellow-start');
+        else if (r === 8 && c === 13) cell.classList.add('cell-blue-start');
+        else if (r === 13 && c === 6) cell.classList.add('cell-red-start');
 
         boardContainer.appendChild(cell);
       }
     }
 
-    // Add Base Zones as large grid areas
+    // Add Base Zones as large grid areas (Matched to Screenshot 2)
     const bases = [
-      { id: 'zone-red-base', class: 'zone-red-base', area: '1 / 1 / 7 / 7' },
-      { id: 'zone-green-base', class: 'zone-green-base', area: '1 / 10 / 7 / 16' },
-      { id: 'zone-yellow-base', class: 'zone-yellow-base', area: '10 / 10 / 16 / 16' },
-      { id: 'zone-blue-base', class: 'zone-blue-base', area: '10 / 1 / 16 / 7' },
+      { id: 'zone-green-base', class: 'zone-green-base', area: '1 / 1 / 7 / 7' },       // Top-Left
+      { id: 'zone-yellow-base', class: 'zone-yellow-base', area: '1 / 10 / 7 / 16' },   // Top-Right
+      { id: 'zone-blue-base', class: 'zone-blue-base', area: '10 / 10 / 16 / 16' },     // Bottom-Right
+      { id: 'zone-red-base', class: 'zone-red-base', area: '10 / 1 / 16 / 7' },         // Bottom-Left
       { id: 'zone-center', class: 'zone-center', area: '7 / 7 / 10 / 10' }
     ];
 
@@ -168,16 +168,16 @@ const LudoGameManager = (() => {
   function getHomeStretchCoords(color, stretchIndex) {
     // stretchIndex: 0..5 (0 = entry step, 5 = center victory)
     const HOME_PATHS = {
-      red: [
+      green: [
         {r: 7, c: 1}, {r: 7, c: 2}, {r: 7, c: 3}, {r: 7, c: 4}, {r: 7, c: 5}, {r: 7, c: 6}
       ],
-      green: [
+      yellow: [
         {r: 1, c: 7}, {r: 2, c: 7}, {r: 3, c: 7}, {r: 4, c: 7}, {r: 5, c: 7}, {r: 6, c: 7}
       ],
-      yellow: [
+      blue: [
         {r: 7, c: 13}, {r: 7, c: 12}, {r: 7, c: 11}, {r: 7, c: 10}, {r: 7, c: 9}, {r: 7, c: 8}
       ],
-      blue: [
+      red: [
         {r: 13, c: 7}, {r: 12, c: 7}, {r: 11, c: 7}, {r: 10, c: 7}, {r: 9, c: 7}, {r: 8, c: 7}
       ]
     };
@@ -543,7 +543,6 @@ const LudoGameManager = (() => {
     }, 400);
   }
 
-  // Convert player relative step count to absolute 0..51 main track index
   function getAbsoluteTrackIndex(color, stepCount) {
     const cfg = PLAYERS_CONFIG.find(c => c.color === color);
     return (cfg.startPos + stepCount) % 52;

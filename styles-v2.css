@@ -615,6 +615,74 @@
   100% { transform: scale(1.35); }
 }
 
+.ludo-fullscreen-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background: radial-gradient(circle at center, #1e3a8a, #0f172a);
+  background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 10px),
+                    repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 10px);
+  border-radius: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.ludo-fullscreen-card .ludo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  gap: 12px;
+}
+
+.ludo-fullscreen-card #ludo-fullscreen-banner {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  margin-bottom: 10px;
+}
+
+.ludo-fullscreen-card .ludo-board-container {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+  width: 100%;
+}
+
+.ludo-fullscreen-card .ludo-panel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  gap: 10px;
+  width: 100%;
+}
+
+.ludo-fullscreen-card .ludo-turn-card,
+.ludo-fullscreen-card .ludo-dice-box {
+  flex: 1;
+  min-width: 45%;
+}
+
+.ludo-fullscreen-card .ludo-log-box {
+  display: none;
+}
+
 /* Dice & Controls Side Panel */
 .ludo-panel {
   background: #ffffff;
