@@ -224,14 +224,32 @@ const LudoGameManager = (() => {
     if (btnExitFs) {
       btnExitFs.addEventListener('click', () => toggleFullscreen(false));
     }
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+         // Browser exited fullscreen (e.g. via ESC key)
+         const ludoCard = document.getElementById('ludo-fullscreen-container');
+         if (ludoCard && ludoCard.classList.contains('ludo-fullscreen-card')) {
+             toggleFullscreen(false);
+         }
+      }
+    });
   }
 
   // Toggle Fullscreen Mobile Arena Mode
   function toggleFullscreen(enable) {
     const ludoCard = document.getElementById('ludo-fullscreen-container');
     const banner = document.getElementById('ludo-fullscreen-banner');
+    let placeholder = document.getElementById('ludo-fs-placeholder');
     
     if (enable) {
+      if (!placeholder && ludoCard) {
+        placeholder = document.createElement('div');
+        placeholder.id = 'ludo-fs-placeholder';
+        ludoCard.parentNode.insertBefore(placeholder, ludoCard);
+      }
+      if (ludoCard) document.body.appendChild(ludoCard);
+      
       if (ludoCard) ludoCard.classList.add('ludo-fullscreen-card');
       if (banner) banner.style.display = 'flex';
       
@@ -240,9 +258,11 @@ const LudoGameManager = (() => {
           document.documentElement.requestFullscreen().catch(() => {});
         }
       } catch (e) {}
-
-      alert('📱 Mode Layar Penuh (Fullscreen) AKTIF!\n\nPetunjuk: Untuk keluar dari layar penuh, klik tombol "❌ Keluar Layar Penuh" di bagian atas atau tekan tombol ESC/Back di HP Anda.');
     } else {
+      if (placeholder && ludoCard && ludoCard.parentNode !== placeholder.parentNode) {
+        placeholder.parentNode.insertBefore(ludoCard, placeholder);
+      }
+      
       if (ludoCard) ludoCard.classList.remove('ludo-fullscreen-card');
       if (banner) banner.style.display = 'none';
 
@@ -350,6 +370,21 @@ const LudoGameManager = (() => {
   }
 
   // Core Dice Rolling Logic with 3D animation
+  function getDiceSvg(val) {
+    const dots = {
+      1: ['<circle cx="50" cy="50" r="10" fill="#4f46e5" />'],
+      2: ['<circle cx="30" cy="30" r="10" fill="#4f46e5" />', '<circle cx="70" cy="70" r="10" fill="#4f46e5" />'],
+      3: ['<circle cx="25" cy="25" r="10" fill="#4f46e5" />', '<circle cx="50" cy="50" r="10" fill="#4f46e5" />', '<circle cx="75" cy="75" r="10" fill="#4f46e5" />'],
+      4: ['<circle cx="25" cy="25" r="10" fill="#4f46e5" />', '<circle cx="75" cy="25" r="10" fill="#4f46e5" />', '<circle cx="25" cy="75" r="10" fill="#4f46e5" />', '<circle cx="75" cy="75" r="10" fill="#4f46e5" />'],
+      5: ['<circle cx="25" cy="25" r="10" fill="#4f46e5" />', '<circle cx="75" cy="25" r="10" fill="#4f46e5" />', '<circle cx="50" cy="50" r="10" fill="#4f46e5" />', '<circle cx="25" cy="75" r="10" fill="#4f46e5" />', '<circle cx="75" cy="75" r="10" fill="#4f46e5" />'],
+      6: ['<circle cx="25" cy="22" r="10" fill="#4f46e5" />', '<circle cx="75" cy="22" r="10" fill="#4f46e5" />', '<circle cx="25" cy="50" r="10" fill="#4f46e5" />', '<circle cx="75" cy="50" r="10" fill="#4f46e5" />', '<circle cx="25" cy="78" r="10" fill="#4f46e5" />', '<circle cx="75" cy="78" r="10" fill="#4f46e5" />']
+    };
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block;">
+      <rect width="100" height="100" rx="20" fill="#ffffff" stroke="#c7d2fe" stroke-width="4" />
+      ${(dots[val] || dots[1]).join('')}
+    </svg>`;
+  }
+
   function rollDice() {
     state.isRolling = true;
     const btnRoll = document.getElementById('btn-ludo-roll');
@@ -371,7 +406,7 @@ const LudoGameManager = (() => {
       if (diceDisplay) {
         diceDisplay.classList.remove('rolling');
         diceDisplay.setAttribute('data-value', roll);
-        diceDisplay.innerHTML = `<span class="dice-val-num">${roll}</span>`;
+        diceDisplay.innerHTML = getDiceSvg(roll);
       }
 
       logMessage(`🎲 ${state.players[state.currentTurnIndex].name} melempar dadu: <strong>${roll}</strong>!`);
@@ -719,6 +754,9 @@ const LudoGameManager = (() => {
     const baseArea = document.getElementById(`zone-${curPlayer.color}-base`);
     if (diceBox && baseArea) {
       diceBox.dataset.color = curPlayer.color;
+      if (!diceBox.innerHTML.includes('<svg') && !state.isRolling) {
+         diceBox.innerHTML = getDiceSvg(state.diceValue || 1);
+      }
       if (diceBox.parentElement !== baseArea) {
         baseArea.appendChild(diceBox);
       }

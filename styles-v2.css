@@ -710,14 +710,11 @@
 .ludo-dice-box {
   width: 50px;
   height: 50px;
-  background: linear-gradient(145deg, #6366f1, #4f46e5);
+  background: transparent;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 900;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   position: absolute;
   z-index: 100;
