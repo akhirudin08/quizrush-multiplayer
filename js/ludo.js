@@ -493,7 +493,7 @@ const LudoGameManager = (() => {
     });
   }
 
-  // Move Selected Token
+  // Move Selected Token Step by Step
   function moveToken(token) {
     const curPlayer = state.players[state.currentTurnIndex];
     const roll = state.diceValue;
@@ -502,15 +502,30 @@ const LudoGameManager = (() => {
       // Step out of base to start (stepCount = 0)
       token.stepCount = 0;
       logMessage(`🚀 ${curPlayer.name} mengeluarkan bidak ke arena!`);
+      if (window.Sounds) Sounds.play('correct');
+      renderTokens();
+      finalizeMove(token, curPlayer, roll);
     } else {
-      token.stepCount += roll;
       logMessage(`👣 ${curPlayer.name} memindahkan bidak ${roll} langkah.`);
+      let stepsTaken = 0;
+      const originalStep = token.stepCount;
+      
+      const stepInterval = setInterval(() => {
+        stepsTaken++;
+        token.stepCount = originalStep + stepsTaken;
+        
+        if (window.Sounds) Sounds.play('tick');
+        renderTokens();
+        
+        if (stepsTaken >= roll) {
+          clearInterval(stepInterval);
+          finalizeMove(token, curPlayer, roll);
+        }
+      }, 300); // 300ms per step animation
     }
+  }
 
-    if (window.Sounds) Sounds.play('correct');
-
-    renderTokens();
-
+  function finalizeMove(token, curPlayer, roll) {
     // Check Capture & Victory
     setTimeout(() => {
       let captureOccurred = false;
