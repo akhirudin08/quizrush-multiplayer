@@ -228,7 +228,7 @@ const LudoGameManager = (() => {
 
   // Toggle Fullscreen Mobile Arena Mode
   function toggleFullscreen(enable) {
-    const ludoCard = document.querySelector('#page-ludo .glass-card-full');
+    const ludoCard = document.getElementById('ludo-fullscreen-container');
     const banner = document.getElementById('ludo-fullscreen-banner');
     
     if (enable) {
@@ -269,7 +269,7 @@ const LudoGameManager = (() => {
   // Start a New Game Session
   function startNewGame() {
     const mainUser = (window.Auth && Auth.user && Auth.user.username) ? Auth.user.username : 'Pemain 1';
-    const mainAvatar = (window.Auth && Auth.user) ? Avatars.getSvg(Auth.user.avatarId || 0) : Avatars.getSvg(0);
+    const mainAvatar = (window.Auth && Auth.user) ? getAvatarSVG(Auth.user.avatarId || 0) : getAvatarSVG(0);
 
     state.players = [];
     state.rankings = [];
@@ -295,12 +295,12 @@ const LudoGameManager = (() => {
       } else if (state.botCount > 0 && index >= (activeColors.length - state.botCount)) {
         isBot = true;
         name = BOT_NAMES[botIdx % BOT_NAMES.length];
-        avatar = Avatars.getSvg((botIdx + 1) % 6);
+        avatar = getAvatarSVG((botIdx + 1) % 6);
         botIdx++;
       } else {
         isBot = false;
         name = `Pemain ${index + 1}`;
-        avatar = Avatars.getSvg(index % 6);
+        avatar = getAvatarSVG(index % 6);
       }
 
       state.players.push({

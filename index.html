@@ -560,40 +560,42 @@
         </div>
       </div>
 
-      <!-- Top bar message for Fullscreen mode -->
-      <div id="ludo-fullscreen-banner" style="display: none; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); padding: 8px 14px; border-radius: 12px; margin-bottom: 12px; align-items: center; justify-content: space-between; color: #4f46e5; font-size: 0.85rem; font-weight: 700;">
-        <span>📱 Mode Layar Penuh Aktif — Tekan "❌ Keluar Layar Penuh" atau tombol ESC/Back untuk kembali</span>
-        <button id="btn-exit-ludo-fullscreen" class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 0.75rem;">❌ Keluar Layar Penuh</button>
-      </div>
-
-      <div class="ludo-wrapper">
-        <!-- 15x15 Ludo Board -->
-        <div class="ludo-board-container">
-          <div id="ludo-board"></div>
+      <div id="ludo-fullscreen-container">
+        <!-- Top bar message for Fullscreen mode -->
+        <div id="ludo-fullscreen-banner" style="display: none; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); padding: 8px 14px; border-radius: 12px; margin-bottom: 12px; align-items: center; justify-content: space-between; color: #4f46e5; font-size: 0.85rem; font-weight: 700;">
+          <span>📱 Mode Layar Penuh Aktif — Tekan "❌ Keluar Layar Penuh" atau tombol ESC/Back untuk kembali</span>
+          <button id="btn-exit-ludo-fullscreen" class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 0.75rem;">❌ Keluar Layar Penuh</button>
         </div>
 
-        <!-- Right Side Panel: Turn & Dice Controls -->
-        <div class="ludo-panel">
-          <div id="ludo-turn-card" class="ludo-turn-card">
-            <div class="turn-avatar">🔴</div>
-            <div class="turn-details">
-              <span class="turn-label">GILIRAN MAIN</span>
-              <h4 class="turn-name">Klik Game Baru</h4>
-            </div>
+        <div class="ludo-wrapper">
+          <!-- 15x15 Ludo Board -->
+          <div class="ludo-board-container">
+            <div id="ludo-board"></div>
           </div>
 
-          <div style="text-align: center; margin: 10px 0;">
-            <div id="ludo-dice-box" class="ludo-dice-box" data-value="1">
-              <span class="dice-val-num">🎲</span>
+          <!-- Right Side Panel: Turn & Dice Controls -->
+          <div class="ludo-panel">
+            <div id="ludo-turn-card" class="ludo-turn-card">
+              <div class="turn-avatar">🔴</div>
+              <div class="turn-details">
+                <span class="turn-label">GILIRAN MAIN</span>
+                <h4 class="turn-name">Klik Game Baru</h4>
+              </div>
             </div>
-            <button id="btn-ludo-roll" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 1.1rem; background: linear-gradient(135deg, #6366f1, #4f46e5);">🎲 KOCOK DADU</button>
-          </div>
 
-          <!-- Log History -->
-          <div>
-            <h4 style="font-size: 0.85rem; font-weight: 800; color: #475569; margin-bottom: 8px;">📜 RIWAYAT LANGKAH</h4>
-            <div id="ludo-log-box" class="ludo-log-box">
-              <div class="ludo-log-item">Pilih mode &amp; klik "Game Baru" untuk memulai!</div>
+            <div style="text-align: center; margin: 10px 0;">
+              <div id="ludo-dice-box" class="ludo-dice-box" data-value="1">
+                <span class="dice-val-num">🎲</span>
+              </div>
+              <button id="btn-ludo-roll" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 1.1rem; background: linear-gradient(135deg, #6366f1, #4f46e5);">🎲 KOCOK DADU</button>
+            </div>
+
+            <!-- Log History -->
+            <div>
+              <h4 style="font-size: 0.85rem; font-weight: 800; color: #475569; margin-bottom: 8px;">📜 RIWAYAT LANGKAH</h4>
+              <div id="ludo-log-box" class="ludo-log-box">
+                <div class="ludo-log-item">Pilih mode &amp; klik "Game Baru" untuk memulai!</div>
+              </div>
             </div>
           </div>
         </div>
