@@ -635,44 +635,67 @@ const LudoGameManager = (() => {
     rollDice();
   }
 
-  // Render Token Elements on 15x15 Board Grid & Home Bases
-  function renderTokens() {
-    // Clear all tokens on screen
-    document.querySelectorAll('.ludo-token').forEach(t => t.remove());
-
+  function doRenderTokens() {
     state.players.forEach(player => {
       player.tokens.forEach(tok => {
-        const tokenEl = document.createElement('div');
-        tokenEl.id = `token-${player.color}-${tok.id}`;
-        tokenEl.className = `ludo-token token-${player.color}`;
-        tokenEl.innerHTML = `<div class="token-pin"></div>`;
+        let tokenEl = document.getElementById(`token-${player.color}-${tok.id}`);
+        if (!tokenEl) {
+          tokenEl = document.createElement('div');
+          tokenEl.id = `token-${player.color}-${tok.id}`;
+          tokenEl.className = `ludo-token token-${player.color}`;
+          tokenEl.style.viewTransitionName = `token-${player.color}-${tok.id}`;
+          tokenEl.innerHTML = `<div class="token-pin"></div>`;
+        }
+
+        tokenEl.classList.remove('finished-token');
+        tokenEl.style.transform = '';
+
+        let targetParent = null;
 
         if (tok.stepCount === -1) {
           // Inside Home Base slot
-          const slot = document.getElementById(`slot-${player.color}-${tok.id}`);
-          if (slot) slot.appendChild(tokenEl);
+          targetParent = document.getElementById(`slot-${player.color}-${tok.id}`);
         } else if (tok.stepCount <= 50) {
           // On 52 Main Track
           const absIdx = getAbsoluteTrackIndex(player.color, tok.stepCount);
           const coords = getMainTrackCoords(absIdx);
-          const cell = document.querySelector(`.ludo-cell[data-row="${coords.r}"][data-col="${coords.c}"]`);
-          if (cell) cell.appendChild(tokenEl);
+          targetParent = document.querySelector(`.ludo-cell[data-row="${coords.r}"][data-col="${coords.c}"]`);
         } else if (tok.stepCount < 56) {
           // On Home Stretch
           const stretchIdx = tok.stepCount - 51;
           const coords = getHomeStretchCoords(player.color, stretchIdx);
-          const cell = document.querySelector(`.ludo-cell[data-row="${coords.r}"][data-col="${coords.c}"]`);
-          if (cell) cell.appendChild(tokenEl);
+          targetParent = document.querySelector(`.ludo-cell[data-row="${coords.r}"][data-col="${coords.c}"]`);
         } else {
           // Finished inside center victory triangle
-          const centerCell = document.querySelector(`.zone-center`);
-          if (centerCell) {
-            tokenEl.classList.add('finished-token');
-            centerCell.appendChild(tokenEl);
-          }
+          targetParent = document.querySelector(`.zone-center`);
+          tokenEl.classList.add('finished-token');
+        }
+
+        if (targetParent && tokenEl.parentElement !== targetParent) {
+          targetParent.appendChild(tokenEl);
         }
       });
     });
+
+    // Fix overlap by translating if multiple tokens in same cell
+    document.querySelectorAll('.ludo-cell').forEach(cell => {
+       const tokens = Array.from(cell.querySelectorAll('.ludo-token'));
+       if (tokens.length > 1) {
+           tokens.forEach((t, i) => {
+               const offset = (i - (tokens.length - 1)/2) * 6;
+               t.style.transform = `translate(${offset}px, ${offset}px) scale(0.85)`;
+           });
+       }
+    });
+  }
+
+  // Render Token Elements on 15x15 Board Grid & Home Bases
+  function renderTokens() {
+    if (document.startViewTransition) {
+       document.startViewTransition(() => doRenderTokens());
+    } else {
+       doRenderTokens();
+    }
   }
 
   // Update Current Turn Indicator UI
@@ -690,6 +713,20 @@ const LudoGameManager = (() => {
           <h4 class="turn-name" style="color: var(--ludo-${curPlayer.color});">${PLAYERS_CONFIG.find(c=>c.color===curPlayer.color).badge} ${curPlayer.name} ${curPlayer.isBot ? '(BOT)' : ''}</h4>
         </div>
       `;
+    }
+
+    const diceBox = document.getElementById('ludo-dice-box');
+    const baseArea = document.getElementById(`zone-${curPlayer.color}-base`);
+    if (diceBox && baseArea) {
+      diceBox.dataset.color = curPlayer.color;
+      if (diceBox.parentElement !== baseArea) {
+        baseArea.appendChild(diceBox);
+      }
+      if (!curPlayer.isBot && !state.diceRolled && !state.isRolling) {
+         diceBox.classList.add('can-roll');
+      } else {
+         diceBox.classList.remove('can-roll');
+      }
     }
 
     const btnRoll = document.getElementById('btn-ludo-roll');
